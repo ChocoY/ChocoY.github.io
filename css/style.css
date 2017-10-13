@@ -1,0 +1,94 @@
+@charset "UTF-8";
+/* colors */
+/* default */
+* {
+  font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
+}
+
+/* header */
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid #e8e3e3;
+}
+
+.navbar-nav {
+  padding: 0 20px;
+}
+
+.nav-item {
+  padding: 4px 20px;
+  margin: 0 10px;
+}
+
+.nav-item.active {
+  border-bottom: 2px solid #CD1B22;
+}
+
+.logo {
+  height: 72px;
+  padding: 6px;
+}
+
+/* banner */
+.banner {
+  height: 150px;
+  padding: 0;
+  border: none;
+}
+
+@media (min-width: 576px) {
+  .banner {
+    height: 200px;
+  }
+}
+
+@media (min-width: 768px) {
+  .banner {
+    height: 250px;
+  }
+}
+
+@media (min-width: 992px) {
+  .banner {
+    height: 350px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .banner {
+    height: 400px;
+  }
+}
+
+.carousel-item {
+  background-size: cover;
+  background-position: center;
+  background-repeat: x-repeat;
+}
+
+/* ad */
+.ad {
+  background: #CD1B22;
+  color: #fdd;
+  font-size: 1rem;
+}
+
+.ad .row div {
+  padding: 0;
+}
+
+.ad a {
+  display: block;
+  color: #fdd;
+  padding: 18px 0;
+  transition: all .2s;
+  text-decoration: unset;
+}
+
+.ad a:hover {
+  color: #fee;
+  background: #c41a21;
+}
+ 
+
+ /*# sourceMappingURL= style.css.map */

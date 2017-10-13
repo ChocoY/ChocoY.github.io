@@ -1,0 +1,39 @@
+@charset "UTF-8";
+/* colors */
+/* default */
+* {
+  font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
+}
+
+/* header */
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid #fee6e7;
+}
+
+.navbar-nav {
+  padding: 0 20px;
+}
+
+.nav-item {
+  padding: 5px 20px;
+  margin: 0 10px;
+}
+
+.nav-item.active {
+  border-bottom: 2px solid #CD1B22;
+}
+
+.logo {
+  height: 74px;
+  padding: 10px;
+}
+
+/* banner */
+.carousel-item {
+  height: 400px;
+  background-size: cover center;
+}
+ 
+
+ /*# sourceMappingURL= style.css.map */

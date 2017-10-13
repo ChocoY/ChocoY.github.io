@@ -1,0 +1,101 @@
+/* colors */
+
+$red: #CD1B22;
+$red-shadow: hsl(358, 10%, 90%);
+$nav-bg: #333;
+
+/* default */
+
+* {
+    font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
+}
+
+
+/* header */
+
+.navbar {
+    background: #fff;
+    border-bottom: 1px solid $red-shadow;
+}
+
+.navbar-nav {
+    padding: 0 20px;
+}
+
+.nav-item {
+    padding: 4px 20px;
+    margin: 0 10px;
+}
+
+.nav-item.active {
+    border-bottom: 2px solid $red;
+}
+
+.logo {
+    height: 72px;
+    padding: 6px;
+}
+
+
+/* banner */
+
+.banner {
+    height: 150px;
+    padding: 0;
+    border: none;
+}
+
+@media (min-width: 576px) {
+    .banner {
+        height: 200px;
+    }
+}
+
+@media (min-width: 768px) {
+    .banner {
+        height: 250px;
+    }
+}
+
+@media (min-width: 992px) {
+    .banner {
+        height: 350px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .banner {
+        height: 400px;
+    }
+}
+
+.carousel-item {
+    background-size: cover;
+    background-position: center;
+    background-repeat: x-repeat;
+}
+
+
+/* ad */
+
+.ad {
+    background: $red;
+    color: #fdd;
+    font-size: 1rem;
+    .row {
+        div {
+            padding: 0;
+        }
+    }
+    a {
+        display: block;
+        color: #fdd;
+        padding: 18px 0;
+        transition: all .2s;
+        text-decoration: unset;
+        &:hover {
+            color: #fee;
+            background: darken($red, 2);
+        }
+    }
+}
