@@ -5,6 +5,11 @@
   font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
 }
 
+html,
+body {
+  background-color: #eee;
+}
+
 /* header */
 .navbar {
   background: #fff;
@@ -73,15 +78,11 @@
   font-size: 1rem;
 }
 
-.ad .row div {
-  padding: 0;
-}
-
 .ad a {
   display: block;
   color: #fdd;
   padding: 18px 0;
-  transition: all .2s;
+  transition: background .2s;
   text-decoration: unset;
 }
 
@@ -118,6 +119,89 @@
   border-width: 14px 4px 14px 4px;
   border-style: solid;
   border-color: transparent transparent #CD1B22 #CD1B22;
+}
+
+/* card */
+.card {
+  width: 16rem;
+  padding: 3px;
+  margin: .25rem;
+  border-color: #eee;
+  border-radius: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.card .card-img-top {
+  position: relative;
+  top: 15%;
+  transition: top .4s ease-out;
+}
+
+.card .card-body {
+  transition: top .4s ease-out;
+  position: relative;
+  background: #223;
+  color: #eee;
+  top: 32%;
+  padding: 1rem .5rem;
+}
+
+.card .card-body .card-title {
+  font-size: 1rem;
+  margin-bottom: .3rem;
+}
+
+.card .card-body .card-text {
+  color: #e84d53;
+  font-size: .8rem;
+}
+
+.card:hover, .card:active, .card:focus {
+  border-color: #f9d4d6;
+}
+
+.card:hover .card-img-top, .card:active .card-img-top, .card:focus .card-img-top {
+  top: 5%;
+}
+
+.card:hover .card-body, .card:active .card-body, .card:focus .card-body {
+  top: 0;
+}
+
+/* footer */
+.footer {
+  user-select: none;
+  border-top: 3px solid #CD1B22;
+  padding: 50px 0 0 0;
+  background-color: #eaeaea;
+  background-image: url("https://www.transparenttextures.com/patterns/escheresque.png");
+}
+
+.footer .main {
+  padding-bottom: 40px;
+}
+
+.footer .links {
+  padding: 0 80px;
+}
+
+.footer .links a {
+  color: #666;
+  font-size: .8rem;
+}
+
+.footer .call {
+  color: #CD1B22;
+  font-size: 1.2rem;
+}
+
+.copyright {
+  color: #000;
+  padding: 3px 0;
+  background-color: #ddd;
+  background-image: url("https://www.transparenttextures.com/patterns/escheresque.png");
+  font-size: .8rem;
 }
  
 

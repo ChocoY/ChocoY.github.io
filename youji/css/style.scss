@@ -3,11 +3,18 @@
 $red: #CD1B22;
 $red-shadow: hsl(358, 10%, 90%);
 $nav-bg: #333;
+$bg: #eee;
+$footer-bg-url:'https://www.transparenttextures.com/patterns/escheresque.png';
 
 /* default */
 
 * {
     font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
+}
+
+html,
+body {
+    background-color: $bg;
 }
 
 
@@ -82,16 +89,11 @@ $nav-bg: #333;
     background: $red;
     color: #fdd;
     font-size: 1rem;
-    .row {
-        div {
-            padding: 0;
-        }
-    }
     a {
         display: block;
         color: #fdd;
         padding: 18px 0;
-        transition: all .2s;
+        transition: background .2s;
         text-decoration: unset;
         &:hover {
             color: #fee;
@@ -132,4 +134,86 @@ $nav-bg: #333;
     border-width: 14px 4px 14px 4px;
     border-style: solid;
     border-color: transparent transparent $red $red;
+}
+
+
+/* card */
+
+.card {
+    width: 16rem;
+    padding: 3px;
+    margin: .25rem;
+    // border: none;
+    border-color: #eee;
+    border-radius: 0;
+    overflow: hidden;
+    padding: 0;
+    .card-img-top {
+        position: relative;
+        top: 15%;
+        transition: top .4s ease-out;
+    }
+    .card-body {
+        transition: top .4s ease-out;
+        position: relative;
+        background: #223;
+        color: #eee;
+        top: 32%;
+        padding: 1rem .5rem;
+        ;
+        .card-title {
+            font-size: 1rem;
+            margin-bottom: .3rem;
+        }
+        .card-text {
+            color: lighten($red, 15);
+            font-size: .8rem;
+        }
+    }
+    &:hover,
+    &:active,
+    &:focus {
+        border-color: lighten($red, 45);
+        .card-img-top {
+            top: 5%;
+        }
+        .card-body {
+            top: 0;
+        }
+    }
+}
+
+
+/* footer */
+
+.footer {
+    user-select: none;
+    border-top: 3px solid $red;
+    padding: 50px 0 0 0;
+    background-color: #eaeaea;
+    background-image: url($footer-bg-url);
+    .main {
+        padding-bottom: 40px;
+    }
+    .links {
+        padding: 0 80px;
+        //border-left: 1px solid #bbb;
+        // border-right: 1px solid #bbb;
+        a {
+            color: #666;
+            font-size: .8rem;
+        }
+    }
+    .call {
+        color: $red;
+        font-size: 1.2rem;
+    }
+}
+
+.copyright {
+    color: #000;
+    padding: 3px 0;
+    background-color: #ddd;
+    background-image: url($footer-bg-url);
+    font-size: .8rem;
 }
