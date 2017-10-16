@@ -99,3 +99,37 @@ $nav-bg: #333;
         }
     }
 }
+
+
+/* section */
+
+.section {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+/* title */
+
+.row-title {
+    background: $red;
+    color: #fff;
+    padding: 2px 6px;
+    border-bottom: 1px solid $red;
+    display: block;
+    position: relative;
+    height: 28px;
+}
+
+.row-title:after {
+    content: '';
+    width: 0;
+    height: 0;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 76px;
+    border-width: 14px 4px 14px 4px;
+    border-style: solid;
+    border-color: transparent transparent $red $red;
+}
