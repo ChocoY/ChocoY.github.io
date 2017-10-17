@@ -123,28 +123,41 @@ body {
 
 /* card */
 .card {
-  width: 16rem;
-  padding: 3px;
-  margin: .25rem;
+  width: 12rem;
+  padding: 0;
+  margin: 2px;
+  border: none;
+  height: 14rem;
   border-color: #eee;
   border-radius: 0;
   overflow: hidden;
-  padding: 0;
+  position: relative;
 }
 
-.card .card-img-top {
+.card .card-img-div {
   position: relative;
+  width: 12rem;
+  height: 12rem;
+  overflow: hidden;
   top: 15%;
   transition: top .4s ease-out;
 }
 
+.card .card-img-div .card-img-top {
+  max-width: 12rem;
+  max-height: 12rem;
+}
+
 .card .card-body {
+  width: 100%;
+  height: 5.5rem;
   transition: top .4s ease-out;
   position: relative;
   background: #223;
   color: #eee;
-  top: 32%;
+  top: 14rem;
   padding: 1rem .5rem;
+  position: absolute;
 }
 
 .card .card-body .card-title {
@@ -157,16 +170,12 @@ body {
   font-size: .8rem;
 }
 
-.card:hover, .card:active, .card:focus {
-  border-color: #f9d4d6;
-}
-
-.card:hover .card-img-top, .card:active .card-img-top, .card:focus .card-img-top {
-  top: 5%;
+.card:hover .card-img-div, .card:active .card-img-div, .card:focus .card-img-div {
+  top: 0%;
 }
 
 .card:hover .card-body, .card:active .card-body, .card:focus .card-body {
-  top: 0;
+  top: 8.5rem;
 }
 
 /* footer */
@@ -174,8 +183,8 @@ body {
   user-select: none;
   border-top: 3px solid #CD1B22;
   padding: 50px 0 0 0;
-  background-color: #eaeaea;
-  background-image: url("https://www.transparenttextures.com/patterns/escheresque.png");
+  background-color: #3a3a3a;
+  background-image: url("https://www.transparenttextures.com/patterns/white-diamond-dark.png");
 }
 
 .footer .main {
@@ -184,10 +193,12 @@ body {
 
 .footer .links {
   padding: 0 80px;
+  border-left: 1px solid #333;
+  border-right: 1px solid #333;
 }
 
 .footer .links a {
-  color: #666;
+  color: #aaa;
   font-size: .8rem;
 }
 
@@ -197,10 +208,9 @@ body {
 }
 
 .copyright {
-  color: #000;
+  color: #555;
   padding: 3px 0;
-  background-color: #ddd;
-  background-image: url("https://www.transparenttextures.com/patterns/escheresque.png");
+  background-color: rgba(0, 0, 0, 0.1);
   font-size: .8rem;
 }
  
