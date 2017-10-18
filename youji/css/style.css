@@ -10,6 +10,54 @@ body {
   background-color: #eee;
 }
 
+/* section */
+.section {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background: #fff;
+}
+
+/* title */
+.row-title {
+  background: #CD1B22;
+  color: #fff;
+  padding: 2px 6px;
+  border-bottom: 1px solid #CD1B22;
+  display: block;
+  position: relative;
+  height: 28px;
+}
+
+.row-title:after {
+  content: '';
+  width: 0;
+  height: 0;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 76px;
+  border-width: 14px 4px 14px 4px;
+  border-style: solid;
+  border-color: transparent transparent #CD1B22 #CD1B22;
+}
+
+.row-header {
+  padding: 10px 10px;
+  border-bottom: solid 1px #eee;
+}
+
+.row-header-links {
+  float: right;
+  padding: 2px 6px;
+  height: 28px;
+  width: auto;
+}
+
+.row-header-links a {
+  font-size: 0.9rem;
+  color: #CD1B22;
+}
+
 /* header */
 .navbar {
   background: #fff;
@@ -91,36 +139,6 @@ body {
   background: #c41a21;
 }
 
-/* section */
-.section {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-/* title */
-.row-title {
-  background: #CD1B22;
-  color: #fff;
-  padding: 2px 6px;
-  border-bottom: 1px solid #CD1B22;
-  display: block;
-  position: relative;
-  height: 28px;
-}
-
-.row-title:after {
-  content: '';
-  width: 0;
-  height: 0;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 76px;
-  border-width: 14px 4px 14px 4px;
-  border-style: solid;
-  border-color: transparent transparent #CD1B22 #CD1B22;
-}
-
 /* card */
 .card {
   width: 12rem;
@@ -128,7 +146,6 @@ body {
   margin: 2px;
   border: none;
   height: 14rem;
-  border-color: #eee;
   border-radius: 0;
   overflow: hidden;
   position: relative;
@@ -153,7 +170,7 @@ body {
   height: 5.5rem;
   transition: top .4s ease-out;
   position: relative;
-  background: #223;
+  background: #333;
   color: #eee;
   top: 14rem;
   padding: 1rem .5rem;
@@ -192,7 +209,6 @@ body {
 }
 
 .footer .links {
-  padding: 0 80px;
   border-left: 1px solid #333;
   border-right: 1px solid #333;
 }
