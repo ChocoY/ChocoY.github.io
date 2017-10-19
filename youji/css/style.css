@@ -7,14 +7,25 @@
 
 html,
 body {
-  background-color: #eee;
+  background-color: #f0f0f0;
+}
+
+.cr {
+  color: #CD1B22;
+}
+
+.cg {
+  color: #a7cd1b;
+}
+
+.cb {
+  color: #1bbccd;
 }
 
 /* section */
 .section {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  background: #fff;
+  margin-top: 1rem;
+  margin-bottom: 8px;
 }
 
 /* title */
@@ -43,7 +54,8 @@ body {
 
 .row-header {
   padding: 10px 10px;
-  border-bottom: solid 1px #eee;
+  background: #fff;
+  margin-bottom: 1px;
 }
 
 .row-header-links {
@@ -54,13 +66,64 @@ body {
 }
 
 .row-header-links a {
-  font-size: 0.9rem;
-  color: #CD1B22;
+  font-size: .9rem;
+  background: #fff;
+  color: #888;
+  padding: 2px 6px;
+  margin-left: 3px;
+  position: relative;
+  display: inline-block;
+  height: 26px;
+}
+
+.row-header-links a:after {
+  content: '';
+  width: 0;
+  height: 0;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 100%;
+  border-width: 13px 3px 13px 3px;
+  border-style: solid;
+  border-color: transparent #fff #fff transparent;
+}
+
+.row-header-links a:before {
+  content: '';
+  width: 0;
+  height: 0;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  border-width: 13px 3px 13px 3px;
+  border-style: solid;
+  border-color: #fff transparent transparent #fff;
+}
+
+.row-header-links a:hover {
+  color: #fff;
+  text-decoration: unset;
+  background: #CD1B22;
+}
+
+.row-header-links a:hover:before {
+  border-color: #CD1B22 transparent transparent #CD1B22;
+}
+
+.row-header-links a:hover:after {
+  border-color: transparent #CD1B22 #CD1B22 transparent;
+}
+
+.row-content {
+  background: auto;
 }
 
 /* header */
 .navbar {
   background: #fff;
+  padding-right: 20px;
   border-bottom: 1px solid #e8e3e3;
 }
 
@@ -71,6 +134,7 @@ body {
 .nav-item {
   padding: 4px 20px;
   margin: 0 10px;
+  font-size: .95rem;
 }
 
 .nav-item.active {
@@ -78,7 +142,7 @@ body {
 }
 
 .logo {
-  height: 72px;
+  height: 70px;
   padding: 6px;
 }
 
@@ -121,17 +185,23 @@ body {
 
 /* ad */
 .ad {
-  background: #CD1B22;
-  color: #fdd;
+  background: #fff;
   font-size: 1rem;
+  padding: 10px 0;
 }
 
 .ad a {
   display: block;
-  color: #fdd;
   padding: 18px 0;
   transition: background .2s;
   text-decoration: unset;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.ad a .icon {
+  font-size: 2rem;
+  padding: 10px;
 }
 
 .ad a:hover {
@@ -139,13 +209,17 @@ body {
   background: #c41a21;
 }
 
+.ad a:hover .icon {
+  color: #fff;
+}
+
 /* card */
 .card {
-  width: 12rem;
-  padding: 0;
+  width: 11.6rem;
   margin: 2px;
   border: none;
   height: 14rem;
+  border-bottom: 8px solid #e8e8e8;
   border-radius: 0;
   overflow: hidden;
   position: relative;
@@ -153,68 +227,77 @@ body {
 
 .card .card-img-div {
   position: relative;
-  width: 12rem;
+  width: 11.6rem;
   height: 12rem;
   overflow: hidden;
-  top: 15%;
-  transition: top .4s ease-out;
+  transition: top .35s ease-out;
+  top: 8%;
 }
 
 .card .card-img-div .card-img-top {
+  border-radius: 0;
   max-width: 12rem;
   max-height: 12rem;
 }
 
 .card .card-body {
   width: 100%;
-  height: 5.5rem;
-  transition: top .4s ease-out;
+  height: 4.5rem;
+  transition: top .35s ease-out;
   position: relative;
-  background: #333;
-  color: #eee;
-  top: 14rem;
-  padding: 1rem .5rem;
+  background: #e8e8e8;
+  color: #666;
+  top: 11.6rem;
+  padding: .8rem .5rem;
   position: absolute;
 }
 
 .card .card-body .card-title {
-  font-size: 1rem;
+  font-size: .9rem;
   margin-bottom: .3rem;
 }
 
 .card .card-body .card-text {
-  color: #e84d53;
-  font-size: .8rem;
+  color: #777;
+  font-size: .75rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .card:hover .card-img-div, .card:active .card-img-div, .card:focus .card-img-div {
-  top: 0%;
+  top: 5%;
 }
 
 .card:hover .card-body, .card:active .card-body, .card:focus .card-body {
-  top: 8.5rem;
+  top: 10.2rem;
 }
 
 /* footer */
 .footer {
+  margin-top: 2rem;
   user-select: none;
   border-top: 3px solid #CD1B22;
   padding: 50px 0 0 0;
-  background-color: #3a3a3a;
-  background-image: url("https://www.transparenttextures.com/patterns/white-diamond-dark.png");
+  background-color: #e7e7e7;
+  background-image: url("https://www.transparenttextures.com/patterns/diagmonds-light.png.");
 }
 
 .footer .main {
   padding-bottom: 40px;
 }
 
+.footer .main .logo {
+  height: 60px;
+}
+
 .footer .links {
-  border-left: 1px solid #333;
-  border-right: 1px solid #333;
+  border-left: 1px solid #bbb;
+  border-right: 1px solid #bbb;
 }
 
 .footer .links a {
-  color: #aaa;
+  color: #666;
   font-size: .8rem;
 }
 
@@ -224,9 +307,9 @@ body {
 }
 
 .copyright {
-  color: #555;
+  color: #888;
   padding: 3px 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
   font-size: .8rem;
 }
  
