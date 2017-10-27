@@ -145,13 +145,15 @@ body {
 }
 
 .nav-item {
-    padding: 4px 20px;
-    margin: 0 10px;
+    padding: 5px 5px;
+    margin: 0 15px;
     font-size: .95rem;
-}
-
-.nav-item.active {
-    border-bottom: 2px solid $red;
+    transition: border-bottom .2s;
+    border-bottom: 2px solid #fff;
+    &.active,
+    &:hover {
+        border-bottom: 2px solid $red;
+    }
 }
 
 .logo {
@@ -242,14 +244,14 @@ body {
     .card-img-div {
         position: relative;
         width: 11.6rem;
-        height: 12rem;
+        height: 11.6rem;
         overflow: hidden;
         transition: top .35s ease-out;
-        top: 8%;
+        top: 0%;
         .card-img-top {
             border-radius: 0;
-            max-width: 12rem;
-            max-height: 12rem;
+            max-width: 11.6rem;
+            max-height: 11.6rem;
         }
     }
     .card-body {
@@ -279,7 +281,7 @@ body {
     &:focus {
         //border-color: lighten($red, 40);
         .card-img-div {
-            top: 5%;
+            top: -4%;
         }
         .card-body {
             top: 10.2rem;
@@ -295,7 +297,7 @@ body {
     user-select: none;
     border-top: 3px solid $red;
     padding: 50px 0 0 0;
-    background-color: #e7e7e7;
+    background-color: #e8e8e8;
     background-image: url($footer-bg-url);
     .main {
         padding-bottom: 40px;
@@ -304,8 +306,8 @@ body {
         }
     }
     .links {
-        border-left: 1px solid #bbb;
-        border-right: 1px solid #bbb;
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
         a {
             color: #666;
             font-size: .8rem;
@@ -318,8 +320,58 @@ body {
 }
 
 .copyright {
-    color: #888;
+    color: #aaa;
     padding: 3px 0;
-    background-color: rgba(0, 0, 0, .05);
+    background-color: #000;
     font-size: .8rem;
+}
+
+.category {
+    background: #fff;
+    margin: 0px;
+    color: #fff;
+    ul {
+        list-style-type: none;
+        margin-left: 0px;
+        padding: 0;
+        font-size: .9rem;
+        li {
+            background: lighten(#fff, 0);
+            color: $red;
+            padding-left: 0;
+            line-height: 2rem;
+            display: block;
+            cursor: pointer;
+            &>li {
+                display: block;
+                line-height: 2rem;
+                padding-left: 1.5rem;
+                &:hover {
+                    width: 100%;
+                }
+            }
+            &:hover {
+                color: #fff;
+                background: $red;
+                width: 100%;
+            }
+        }
+    }
+    &>ul {
+        padding: 0;
+        padding-left: 0px;
+        margin-left: -4px;
+        position: relative;
+        &>li {
+            border-left: 3px solid $red;
+            margin-top: 5px;
+            &>ul>li {
+                padding-left: 30px;
+                font-weight: normal;
+            }
+        }
+    }
+    .menu-0 {
+        padding-left: 10px;
+    }
 }
