@@ -7,7 +7,7 @@
 
 html,
 body {
-  background-color: #f0f0f0;
+  background-color: #f4f4f4;
 }
 
 .cr {
@@ -221,7 +221,7 @@ body {
   margin: 2px;
   border: none;
   height: 14rem;
-  border-bottom: 8px solid #e8e8e8;
+  border-bottom: 8px solid #eee;
   border-radius: 0;
   overflow: hidden;
   position: relative;
@@ -247,8 +247,8 @@ body {
   height: 4.5rem;
   transition: top .35s ease-out;
   position: relative;
-  background: #e8e8e8;
-  color: #666;
+  background: #eee;
+  color: #333;
   top: 11.6rem;
   padding: .8rem .5rem;
   position: absolute;
@@ -260,7 +260,7 @@ body {
 }
 
 .card .card-body .card-text {
-  color: #777;
+  color: #666;
   font-size: .75rem;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -281,7 +281,7 @@ body {
   user-select: none;
   border-top: 3px solid #CD1B22;
   padding: 50px 0 0 0;
-  background-color: #e8e8e8;
+  background-color: #f0f0f0;
   background-image: url("https://www.transparenttextures.com/patterns/diagmonds-light.png.");
 }
 
@@ -319,6 +319,7 @@ body {
   background: #fff;
   color: #fff;
   font-weight: bold;
+  padding: 20px 15px;
 }
 
 .category ul {
@@ -356,13 +357,12 @@ body {
 .category > ul {
   padding: 0;
   padding-left: 0px;
-  margin-left: -4px;
   position: relative;
 }
 
 .category > ul > li {
   border-left: 3px solid #CD1B22;
-  margin-top: 5px;
+  margin: 8px 0;
 }
 
 .category > ul > li > ul > li {
@@ -374,14 +374,14 @@ body {
   padding-left: 10px;
 }
 
-.about-us {
-  background: #fff;
-  padding: 0 0 30px 0;
-}
-
 .content {
+  background: #fff;
   padding: 10px 30px;
   font-size: 0.95rem;
+}
+
+.content li {
+  padding: .5rem 0;
 }
 
 .content p {
@@ -417,10 +417,6 @@ body {
   font-size: 1.2rem;
   font-weight: bold;
   user-select: none;
-}
-
-.content ul li {
-  padding: .5rem 0;
 }
  
 

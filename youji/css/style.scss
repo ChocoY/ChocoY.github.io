@@ -7,11 +7,15 @@ $blue:#1bbccd;
 $darkenRed: darken($red, 4);
 $red-shadow: hsl(358, 10%, 90%);
 $nav-bg: #333;
-$bg: #f0f0f0;
+$bg: #f4f4f4;
 $header-link-color: #888;
 $header-link-bg-color: #fff;
 $header-link-hover-color: $red;
+$footer-bg:#f0f0f0;
 $footer-bg-url:'https://www.transparenttextures.com/patterns/diagmonds-light.png.';
+$card-header-color:#333;
+$card-header-bg:#eee;
+$card-content-color:#666;
 
 /* default */
 
@@ -237,7 +241,7 @@ body {
     margin: 2px;
     border: none;
     height: 14rem;
-    border-bottom: 8px solid #e8e8e8;
+    border-bottom: 8px solid $card-header-bg;
     border-radius: 0;
     overflow: hidden;
     position: relative;
@@ -259,8 +263,8 @@ body {
         height: 4.5rem;
         transition: top .35s ease-out;
         position: relative;
-        background: #e8e8e8;
-        color: #666;
+        background: $card-header-bg;
+        color: $card-header-color;
         top: 11.6rem;
         padding: .8rem .5rem;
         position: absolute;
@@ -269,7 +273,7 @@ body {
             margin-bottom: .3rem;
         }
         .card-text {
-            color: #777;
+            color: $card-content-color;
             font-size: .75rem;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -297,7 +301,7 @@ body {
     user-select: none;
     border-top: 3px solid $red;
     padding: 50px 0 0 0;
-    background-color: #e8e8e8;
+    background-color: $footer-bg;
     background-image: url($footer-bg-url);
     .main {
         padding-bottom: 40px;
@@ -330,6 +334,7 @@ body {
     background: #fff;
     color: #fff;
     font-weight: bold;
+    padding: 20px 15px;
     ul {
         list-style-type: none;
         margin-left: 0px;
@@ -360,11 +365,10 @@ body {
     &>ul {
         padding: 0;
         padding-left: 0px;
-        margin-left: -4px;
         position: relative;
         &>li {
             border-left: 3px solid $red;
-            margin-top: 5px;
+            margin: 8px 0;
             &>ul>li {
                 padding-left: 30px;
                 font-weight: normal;
@@ -376,18 +380,18 @@ body {
     }
 }
 
-.about-us {
-    background: #fff;
-    padding: 0 0 30px 0;
-}
+.about-us {}
 
 .content {
+    background: #fff;
     padding: 10px 30px;
     font-size: 0.95rem;
-}
-
-.content p {
-    text-indent: 2rem;
+    li {
+        padding: .5rem 0;
+    }
+    p {
+        text-indent: 2rem;
+    }
 }
 
 .title {
@@ -419,8 +423,4 @@ body {
     font-size: 1.2rem;
     font-weight: bold;
     user-select: none;
-}
-
-.content ul li {
-    padding: .5rem 0;
 }
