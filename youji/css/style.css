@@ -7,7 +7,7 @@
 
 html,
 body {
-  background-color: #f4f4f4;
+  background-color: #f8f8f8;
 }
 
 .cr {
@@ -20,6 +20,10 @@ body {
 
 .cb {
   color: #1bbccd;
+}
+
+.page-link, .page-link:hover {
+  color: #CD1B22;
 }
 
 /* section */
@@ -53,7 +57,7 @@ body {
 }
 
 .row-header {
-  padding: 10px 10px;
+  padding: 5px 5px;
   background: #fff;
   margin-bottom: 1px;
 }
@@ -117,7 +121,7 @@ body {
 }
 
 .row-content {
-  background: auto;
+  padding: 5px 0px;
 }
 
 /* header */
@@ -217,11 +221,11 @@ body {
 
 /* card */
 .card {
-  width: 11.6rem;
+  width: 11.4rem;
   margin: 2px;
   border: none;
   height: 14rem;
-  border-bottom: 8px solid #eee;
+  border-bottom: 8px solid #f8f8f8;
   border-radius: 0;
   overflow: hidden;
   position: relative;
@@ -229,8 +233,8 @@ body {
 
 .card .card-img-div {
   position: relative;
-  width: 11.6rem;
-  height: 11.6rem;
+  width: 11.4rem;
+  height: 11.4rem;
   overflow: hidden;
   transition: top .35s ease-out;
   top: 0%;
@@ -238,8 +242,8 @@ body {
 
 .card .card-img-div .card-img-top {
   border-radius: 0;
-  max-width: 11.6rem;
-  max-height: 11.6rem;
+  max-width: 11.4rem;
+  max-height: 11.4rem;
 }
 
 .card .card-body {
@@ -247,9 +251,9 @@ body {
   height: 4.5rem;
   transition: top .35s ease-out;
   position: relative;
-  background: #eee;
+  background: #f8f8f8;
   color: #333;
-  top: 11.6rem;
+  top: 11.5rem;
   padding: .8rem .5rem;
   position: absolute;
 }
@@ -319,7 +323,7 @@ body {
   background: #fff;
   color: #fff;
   font-weight: bold;
-  padding: 20px 15px;
+  padding: 10px 15px;
 }
 
 .category ul {
@@ -336,6 +340,7 @@ body {
   line-height: 2rem;
   display: block;
   cursor: pointer;
+  transition: background .15s;
 }
 
 .category ul li > li {
@@ -350,7 +355,7 @@ body {
 
 .category ul li:hover {
   color: #fff;
-  background: #CD1B22;
+  background: #eb6369;
   width: 100%;
 }
 
@@ -370,7 +375,11 @@ body {
   font-weight: normal;
 }
 
-.category .menu-0 {
+.category > ul > li:hover {
+  background: #CD1B22;
+}
+
+.category > ul .menu-0 {
   padding-left: 10px;
 }
 
