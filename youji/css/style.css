@@ -34,20 +34,18 @@ body {
 
 /* title */
 .row-title {
-  background: #CD1B22;
-  color: #fff;
-  padding: 2px 6px;
-  border-bottom: 1px solid #CD1B22;
+  color: #888;
+  font-size: 1.2rem;
+  padding: 4px 6px;
   display: block;
   position: relative;
-  height: 28px;
 }
 
 .row-title:after {
   content: '';
   width: 0;
   height: 0;
-  display: block;
+  display: none;
   position: absolute;
   top: 0;
   left: 76px;
@@ -64,9 +62,9 @@ body {
 
 .row-header-links {
   float: right;
-  padding: 2px 6px;
-  height: 28px;
+  padding: 7px 6px 3px 6px;
   width: auto;
+  top: 10px;
 }
 
 .row-header-links a {
@@ -221,7 +219,7 @@ body {
 
 /* card */
 .card {
-  width: 11.4rem;
+  width: 11rem;
   margin: 2px;
   border: none;
   height: 14rem;
@@ -229,12 +227,13 @@ body {
   border-radius: 0;
   overflow: hidden;
   position: relative;
+  display: inline-block;
 }
 
 .card .card-img-div {
   position: relative;
-  width: 11.4rem;
-  height: 11.4rem;
+  width: 11rem;
+  height: 11rem;
   overflow: hidden;
   transition: top .35s ease-out;
   top: 0%;
@@ -242,8 +241,8 @@ body {
 
 .card .card-img-div .card-img-top {
   border-radius: 0;
-  max-width: 11.4rem;
-  max-height: 11.4rem;
+  max-width: 11rem;
+  max-height: 11rem;
 }
 
 .card .card-body {
@@ -426,6 +425,11 @@ body {
   font-size: 1.2rem;
   font-weight: bold;
   user-select: none;
+}
+
+.contactForm {
+  background: #fff;
+  padding: 15px;
 }
  
 
