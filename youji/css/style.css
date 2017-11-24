@@ -5,6 +5,10 @@
   font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
 }
 
+a, a:hover {
+  text-decoration: none;
+}
+
 html,
 body {
   background-color: #f8f8f8;
@@ -22,7 +26,8 @@ body {
   color: #1bbccd;
 }
 
-.page-link, .page-link:hover {
+.page-link,
+.page-link:hover {
   color: #CD1B22;
 }
 
@@ -34,7 +39,7 @@ body {
 
 /* title */
 .row-title {
-  color: #888;
+  color: #666;
   font-size: 1.2rem;
   padding: 4px 6px;
   display: block;
@@ -218,13 +223,18 @@ body {
 }
 
 /* card */
+.hot-products {
+  padding: 10px 15px;
+}
+
 .card {
-  width: 11rem;
-  margin: 2px;
-  border: none;
+  width: 10rem;
+  margin: 15px 6px;
   height: 14rem;
-  border-bottom: 8px solid #f8f8f8;
+  border: 1px solid #f6f6f6;
+  border-bottom: 8px solid #f6f6f6;
   border-radius: 0;
+  border-color: #f6f6f6;
   overflow: hidden;
   position: relative;
   display: inline-block;
@@ -232,11 +242,11 @@ body {
 
 .card .card-img-div {
   position: relative;
-  width: 11rem;
-  height: 11rem;
+  width: 10rem;
+  height: 10rem;
   overflow: hidden;
   transition: top .35s ease-out;
-  top: 0%;
+  top: 5%;
 }
 
 .card .card-img-div .card-img-top {
@@ -250,8 +260,8 @@ body {
   height: 4.5rem;
   transition: top .35s ease-out;
   position: relative;
-  background: #f8f8f8;
-  color: #333;
+  background: #f6f6f6;
+  color: #666;
   top: 11.5rem;
   padding: .8rem .5rem;
   position: absolute;
@@ -260,22 +270,50 @@ body {
 .card .card-body .card-title {
   font-size: .9rem;
   margin-bottom: .3rem;
+  line-height: 1.2rem;
 }
 
 .card .card-body .card-text {
-  color: #666;
   font-size: .75rem;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
+.card:hover, .card:active, .card:focus {
+  border-color: #d21c23;
+}
+
 .card:hover .card-img-div, .card:active .card-img-div, .card:focus .card-img-div {
-  top: -4%;
+  top: 0%;
 }
 
 .card:hover .card-body, .card:active .card-body, .card:focus .card-body {
   top: 10.2rem;
+  bottom: 0;
+  background-color: #d21c23;
+  color: #fff;
+}
+
+.product-list {
+  padding-top: 15px;
+  padding-left: 25px;
+}
+
+.product-list .card {
+  margin: 10px 15px;
+}
+
+.product-title-img {
+  border: 1px solid #eee;
+}
+
+.companyView {
+  line-height: 1.5rem;
+}
+
+.companyView img {
+  border: 1px solid #e8e8e8;
 }
 
 /* footer */
@@ -285,7 +323,6 @@ body {
   border-top: 3px solid #CD1B22;
   padding: 50px 0 0 0;
   background-color: #f0f0f0;
-  background-image: url("https://www.transparenttextures.com/patterns/diagmonds-light.png.");
 }
 
 .footer .main {
@@ -321,8 +358,11 @@ body {
 .category {
   background: #fff;
   color: #fff;
-  font-weight: bold;
   padding: 10px 15px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .category ul {
@@ -352,7 +392,7 @@ body {
   width: 100%;
 }
 
-.category ul li:hover {
+.category ul li:hover, .category ul li.active, .category ul li.active > a {
   color: #fff;
   background: #eb6369;
   width: 100%;
@@ -366,20 +406,31 @@ body {
 
 .category > ul > li {
   border-left: 3px solid #CD1B22;
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
-.category > ul > li > ul > li {
+.category > ul > li > ul > li > a {
   padding-left: 30px;
   font-weight: normal;
+  display: block;
+  color: #CD1B22;
+  font-style: normal;
+}
+
+.category > ul > li > ul > li > a:hover {
+  color: white;
+  text-decoration: none;
 }
 
 .category > ul > li:hover {
+  color: white;
   background: #CD1B22;
 }
 
-.category > ul .menu-0 {
+.category > ul .menu {
   padding-left: 10px;
+  font-weight: bold;
+  display: block;
 }
 
 .content {
@@ -427,9 +478,32 @@ body {
   user-select: none;
 }
 
+.product-title-header {
+  color: #CD1B22;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f3a7aa;
+}
+
 .contactForm {
   background: #fff;
   padding: 15px;
+}
+
+.utils .toTop {
+  background: #CD1B22;
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+}
+
+.utils .toTop a {
+  padding: 5px 10px;
+  display: block;
+  color: #fff;
+  font-size: .9rem;
 }
  
 
