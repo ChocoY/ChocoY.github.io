@@ -19,6 +19,7 @@
         crossorigin="anonymous">
     <link href="css/open-iconic-bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
 </head>
 
 <body>
@@ -56,57 +57,29 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav>    
+    <div class="container mt-3">
+            <div style="height: 100px;background-color: #800000;background-image: url('https://www.transparenttextures.com/patterns/climpek.png');font-size: 1.5rem;color: white;padding-left: 20px;line-height: 100px;">CONTACT US | 联系我们</div>
+    </div>
     <div class="container  about-us">
         <div class="row">
-            <div class="col-12">
-                <img src="/img/banner1.jpg" alt="" style="width:100%;height:100%">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-md-3 col-sm-12">
-                <div class="category">
-                    <ul>
-                        <li class="item" href="#" data-toggle="collapse" data-target="#ul-0" aria-controls="navbarNavDropdown" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                            <span class="menu-0">UPS电源</span>
-                            <ul id="ul-0" class="collapse">
-                                <li class="item" href="#">EPS电源</li>
-                                <li class="item" href="#">蓄电池</li>
-                                <li class="item" href="#">通信、电力电源</li>
-
-                            </ul>
+            <div class="col-12 col-md-3 col-sm-12 pr-0">
+                    <div id="side-navs" class="category mt-3"><div class="row justify-content-between row-header"><div class="row-title">热门链接</div></div> <ul><li class="item pl-2">首页
+                        </li><li class="item pl-2">产品中心
+                        </li><li class="item pl-2">客户服务
+                        </li><li class="item pl-2">公司简介
+                        </li><li class="item pl-2">联系我们
                         </li>
-                        <li class="item" href="#">
-                            <span class="menu-0">EPS电源</span>
-                        </li>
-                        <li class="item" href="#">
-                            <span class="menu-0">蓄电池</span>
-                        </li>
-                        <li class="item" href="#">
-                            <span class="menu-0">通信、电力电源</span>
-                        </li>
-                        <li class="item" href="#">
-                            <span class="menu-0">机房空调</span>
-                        </li>
-                        <li class="item" href="#">
-                            <span class="menu-0">机房一体化建设</span>
-                        </li>
-                        <li class="item" href="#">
-                            <span class="menu-0">所有</span>>></li>
                     </ul>
                 </div>
             </div>
-            <div class="col-12 col-md-9 col-sm-12 pl-0">
+            <div class="col-12 col-md-9 col-sm-12 mt-3">
                 <div class="contactForm">
                     <p>
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=="#leaveAMessage" aria-expanded="false" aria-controls="leaveAMessage">留言</button>
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#qq" aria-expanded="false" aria-controls="qq">QQ咨询</button>
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#weixin" aria-expanded="false" aria-controls="weixin">微信咨询</button>
+                        <button class="tab active">留言板</button><button class="tab">QQ客服</button>
                     </p>
                     <div class="container" id="leaveAMessage">
-                        <div class="col">
+                        <div class="col pd-4">
                             <form>
                                 <div class="form-group">
                                     <label for="input-title">留言标题</label>
@@ -128,37 +101,25 @@
                                     <label for="input-content">留言内容</label>
                                     <textarea class="form-control" id="input-content" rows="3"></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-primary">提交留言</button>
+                                <button type="submit" class="btn btn-danger">提交留言</button>
                             </form>
                         </div>
                     </div>
 
-                    <div class="container" id="qq">
-                        <div class="col-4">
-                            <a href="javascript:void(0)" onclick="javascript:window.open('tencent://message/?uin=1756866852&websiteName=www.qq.com','_self');">
-                                <h3>QQ客服1</h3>
-                            </a>
+                    <div class="row text-center qq-contact" id="qq">
+                        <div class="col-4 qq pd-4" onclick="javascript:window.open('tencent://message/?uin=1756866852&websiteName=www.qq.com','_self');">
+                            <img src="/img/QQ.png"/><br/>
+                            <span class="qq-link">QQ客服1</span>
                         </div>
-                        <div class="col-4">
-                            <a href="javascript:void(0)" onclick="javascript:window.open('tencent://message/?uin=572380986&websiteName=www.qq.com','_self');">
-                                <h3>QQ客服2</h3>
-                            </a>
+                        <div class="col-4 qq" onclick="javascript:window.open('tencent://message/?uin=572380986&websiteName=www.qq.com','_self');">
+                            <img src="/img/QQ_VIP.png"/><br/>
+                            <span class="qq-link">QQ客服2</span>
                         </div>
-                        <div class="col-4">
-                            <a href="javascript:void(0)" onclick="javascript:window.open('tencent://message/?uin=522028806&websiteName=www.qq.com','_self');">
-                                <h3>QQ客服3</h3>
-                            </a>
+                        <div class="col-4 qq" onclick="javascript:window.open('tencent://message/?uin=522028806&websiteName=www.qq.com','_self');">
+                            <img src="/img/QQ_SVIP.png"/><br/>
+                            <span class="qq-link">QQ客服3</span>
                         </div>
                     </div>
-
-                    <div class="container" id="weixin">
-                        <div class="col-12">
-                            <a href="javascript:void(0)" onclick="javascript:window.open('tencent://message/?uin=1756866852&websiteName=www.qq.com','_self');">
-                                <h3>微信客服</h3>
-                            </a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

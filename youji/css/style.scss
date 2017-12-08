@@ -15,11 +15,16 @@ $footer-bg:#f0f0f0;
 $card-header-color:#666;
 $card-header-bg:#f6f6f6;
 $card-content-color:#666;
+$category-color:#555;
 
 /* default */
 
+
 * {
-    font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
+    font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';    
+}
+button{
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);    
 }
 
 a,a:hover{
@@ -345,6 +350,9 @@ body {
         a {
             color: #666;
             font-size: .8rem;
+            &:hover{
+                text-decoration: underline;
+            }
         }
     }
     .call {
@@ -375,7 +383,7 @@ body {
         font-size: .9rem;
         li {
             background: lighten(#fff, 0);
-            color: $red;
+            color: $category-color;
             padding-left: 0;
             line-height: 2rem;
             display: block;
@@ -407,7 +415,7 @@ body {
                 padding-left: 30px;
                 font-weight: normal;
                 display: block;
-                color:$red;
+                color:$category-color;
                 font-style: normal;
                 &:hover {
                     color: white;
@@ -471,17 +479,74 @@ body {
 }
 
 .product-title-header {
-    color: $red;
+    color: #333;
     font-weight: bold;
     text-align: center;
     padding: 20px;
     margin-bottom: 20px;
     border-bottom: 1px solid lighten($red,35);
 }
+.qq-contact{
+    .qq{
+        padding: 10rem 0;        
+        line-height: 2.5rem;
+        cursor: pointer;
+        img{
+            height: 4rem;
+        }
+        .qq-link{
+            color: $red;
+            font-size: 1.5rem;
+            height:2.5rem;
+            display: inline-block;
+            text-anchor: bottom;
+            transition: text-shadow .3s;
+        }
+        &:hover{
+            .qq-link{                
+                animation: swing .8s;
+            }
+        }
+    }
+    
+}
+
 
 .contactForm {
     background: #fff;
     padding: 15px;
+    .tab {
+        border:none;
+        background: #f8f8f8;        
+        border-bottom:3px solid $red;
+        color:#888;
+        width:50%;
+        padding: 10px;
+        transition: all .15s;
+        cursor: pointer;
+        &:focus{
+            outline: none;
+        }
+        &.active {                       
+            background: white; 
+            color:#333;
+            border-bottom:3px solid $red;
+            box-shadow: 0 -2px 10px -4px rgba(0,0,0,.2);
+        }
+        &:hover {            
+            background: $red;
+            color:white;
+            border-bottom:3px solid $red;
+        }
+        &:first-of-type{
+            border-top:1px solid #eee;
+            border-left:1px solid #eee;
+        }
+        &:last-of-type{
+            border-top:1px solid #eee;
+            border-right:1px solid #eee;
+        }
+    }
 }
 
 .utils {

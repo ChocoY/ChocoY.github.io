@@ -5,6 +5,10 @@
   font-family: '微软雅黑', 'Microsoft YaHei', 'Microsoft JhengHei', '等线', '黑体';
 }
 
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 a, a:hover {
   text-decoration: none;
 }
@@ -343,6 +347,10 @@ body {
   font-size: .8rem;
 }
 
+.footer .links a:hover {
+  text-decoration: underline;
+}
+
 .footer .call {
   color: #CD1B22;
   font-size: 1.2rem;
@@ -374,7 +382,7 @@ body {
 
 .category ul li {
   background: white;
-  color: #CD1B22;
+  color: #555;
   padding-left: 0;
   line-height: 2rem;
   display: block;
@@ -413,7 +421,7 @@ body {
   padding-left: 30px;
   font-weight: normal;
   display: block;
-  color: #CD1B22;
+  color: #555;
   font-style: normal;
 }
 
@@ -479,7 +487,7 @@ body {
 }
 
 .product-title-header {
-  color: #CD1B22;
+  color: #333;
   font-weight: bold;
   text-align: center;
   padding: 20px;
@@ -487,9 +495,70 @@ body {
   border-bottom: 1px solid #f3a7aa;
 }
 
+.qq-contact .qq {
+  padding: 10rem 0;
+  line-height: 2.5rem;
+  cursor: pointer;
+}
+
+.qq-contact .qq img {
+  height: 4rem;
+}
+
+.qq-contact .qq .qq-link {
+  color: #CD1B22;
+  font-size: 1.5rem;
+  height: 2.5rem;
+  display: inline-block;
+  text-anchor: bottom;
+  transition: text-shadow .3s;
+}
+
+.qq-contact .qq:hover .qq-link {
+  animation: swing .8s;
+}
+
 .contactForm {
   background: #fff;
   padding: 15px;
+}
+
+.contactForm .tab {
+  border: none;
+  background: #f8f8f8;
+  border-bottom: 3px solid #CD1B22;
+  color: #888;
+  width: 50%;
+  padding: 10px;
+  transition: all .15s;
+  cursor: pointer;
+}
+
+.contactForm .tab:focus {
+  outline: none;
+}
+
+.contactForm .tab.active {
+  background: white;
+  color: #333;
+  border-bottom: 3px solid #CD1B22;
+  box-shadow: 0 -2px 10px -4px rgba(0, 0, 0, 0.2);
+}
+
+.contactForm .tab:hover {
+  background: #CD1B22;
+  color: white;
+  border-bottom: 3px solid #CD1B22;
+}
+
+.contactForm .tab:first-of-type {
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+}
+
+.contactForm .tab:last-of-type {
+  border-top: 1px solid #eee;
+  border-right: 1px solid #eee;
 }
 
 .utils .toTop {
