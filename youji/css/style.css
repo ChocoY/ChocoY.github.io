@@ -194,6 +194,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: x-repeat;
+  cursor: pointer;
 }
 
 /* ad */

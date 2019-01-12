@@ -215,6 +215,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: x-repeat;
+    cursor: pointer;
 }
 
 
@@ -261,6 +262,7 @@ body {
     overflow: hidden;
     position: relative;
     display: inline-block;
+    cursor: pointer;
     .card-img-div {
         position: relative;
         width: 10rem;
