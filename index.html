@@ -6,18 +6,15 @@
     <title>ChocoY</title>
     <style>
 
-        *{
-            margin:0;
-            border:0;
-            padding:0;
-            font-family: 'Courier New';
-        }
         a{
             color:blueviolet;
         }
         html,body{
             margin:0;
             border:0;
+            font-family: 'Courier New';
+        }
+        body{
         }
 
         main{
@@ -26,20 +23,32 @@
             border: 6px  solid black;
             box-sizing: border-box;
             padding: 0 30px;
-            transform:rotate3D(1,1,1,0deg);
-            transform-origin: 50%;
-            box-shadow: 0 0 4px lightgray;
-            text-shadow: 0 0 1px lightgray;
-            position: relative;
-            top:50%;
-            transform: translateY(-50%);
+            box-shadow: 0 0 5px lightgray;
+            text-shadow: 0 0 2px lightgray;
+        }
+
+        .stage{
+            width: 300px;
+            height: 306px;
+            display: inline-block;
+            background: #f8f8f8;
+            border-width: 1px 1px 1px 1px;
+            border-style: solid;
+            border-color: #e8e8e8;
+            padding: 0 10px;
         }
         header,main>section,footer{
-            padding:20px;
+            padding: 16px;
         }
         main>section{
             border-top: 4px  solid black;
             border-bottom: 4px  solid black;            
+        }
+        
+        figure{
+            margin: 0 auto;
+            display: block;
+            text-align: center;
         }
         
         footer{            
@@ -48,12 +57,6 @@
         }
         body>header{
             border-top: 4px  solid black;
-        }
-        h1{
-           font-size:  40px;
-        }
-        h2{
-           font-size:  30px;
         }
         nav{
             font-size: 20px;
@@ -70,975 +73,1091 @@
     <main>
         <header>
             <h1>ChocoY</h1>
+            <p>Don't worry, be happy.</p>
         </header>    
         <section>
             <article>
                 <h2>Teris</h2>
-                <time>2017-11-08 11:00:16</time>
-                <p>Don't worry, be happy.</p>
+                <time datatime="2017-11-08 11:00:16+08:00">2017-11-08 11:00:16</time>
                 <figure>
-                    <canvas id="c" width="400" height="400"></canvas>
+                    <h3>← → ↓ ↑ | w s a d | light
+                      <input id="theme" type="checkbox" checked="true" onchange="themeChange"/>
+                    </h3>
+                    <div>
+                      <canvas id="stage" class="stage"></canvas>
+                    </div>
+                    <audio preload="preload" crossorigin="anonumous" id="audio0" data-time="38">
+                        <source src="//pic.ibaotu.com/00/38/21/02e888piCKnh.mp3">
+                    </audio>
                 </figure>
             </article>
         </section>    
         <footer>The past is never dead. It's not even past. -- William Faulkner</footer>
     </main>
     <script>
-        "use strict";
-
-        function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-        function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-        var ca = document.getElementById("c");
-        var dpr = window.devicePixelRatio || 1;
-        var W = ca.offsetWidth * dpr;
-        var H = ca.offsetHeight * dpr;
+        const ca = document.getElementById("stage");
+        const dpr = window.devicePixelRatio || 1;
+        const W = ca.offsetWidth * dpr - 20;
+        const H = ca.offsetHeight * dpr;
         ca.width = W;
         ca.height = H;
-        var cvs = ca.getContext("2d");
-        var debug = false;
-
+        const cvs = ca.getContext("2d");
+        const debug = false;        
         cvs.lineCap = "square";
-        var config = {
-        colors: {
-        bg: "#fff",
-        o: "hsl(0,35%,40%)",
-        i: "hsl(35,35%,40%)",
-        z: "hsl(70,35%,40%)",
-        s: "hsl(105,35%,40%)",
-        j: "hsl(140,35%,40%)",
-        l: "hsl(175,35%,40%)",
-        t: "hsl(200,35%,40%)"
-        },
-        textColor: "#000",
-        cubeSize: 15,
-        lineWidth: 2,
-        lineColor: "#ddd",
-        frameColor: "#000",
-        boardHorizontalCubes: 10,
-        boardVerticalCubes: 20
-        };
-        var direction = {
-        up: 0,
-        right: 1,
-        down: 2,
-        left: 3
-        };
-        var BlockType = ["S", "Z", "L", "J", "I", "O", "T"];
-
-        var lastFrameTime = 0;
-        var fps = 0;
-
-        var log = function log(x) {
-        if (debug) {
-        console.log(x);
-        }
-        };
-
-        var Painter = function () {
-        function Painter(cfg, cvs, board) {
-        _classCallCheck(this, Painter);
-
-        this.cubeSize = cfg.cubeSize;
-        this.lineWidth = cfg.lineWidth;
-        this.lineColor = cfg.lineColor;
-        this.frameColor = cfg.frameColor;
-        this.boardHorizontalCubes = cfg.boardHorizontalCubes;
-        this.boardVerticalCubes = cfg.boardVerticalCubes;
-        this.boardHeight = cfg.boardVerticalCubes * cfg.cubeSize + (cfg.boardVerticalCubes + 1) * cfg.lineWidth;
-        this.boardWidth = cfg.boardHorizontalCubes * cfg.cubeSize + (cfg.boardHorizontalCubes + 1) * cfg.lineWidth;
-        this.boardTop = Math.floor((H - this.boardHeight) / 2);
-        this.boardLeft = 10; //Math.floor((W - this.boardWidth) / 2);
-        this.cvs = cvs;
-        this.board = board;
-        }
-
-        Painter.prototype.drawBoard = function drawBoard() {
-        //log('draw board')
-        this.cvs.beginPath();
-        this.cvs.lineWidth = this.lineWidth;
-
-        // horizontal lines
-        for (var i = 0; i <= this.boardVerticalCubes; i++) {
-        this.cvs.moveTo(this.boardLeft, this.boardTop + i * (this.cubeSize + this.lineWidth));
-        this.cvs.lineTo(this.boardLeft + this.boardWidth - this.lineWidth, this.boardTop + i * (this.cubeSize + this.lineWidth));
-        }
-        // vertical lines
-        for (var i = 0; i <= this.boardHorizontalCubes; i++) {
-        this.cvs.moveTo(this.boardLeft + i * (this.cubeSize + this.lineWidth), this.boardTop);
-        this.cvs.lineTo(this.boardLeft + i * (this.cubeSize + this.lineWidth), this.boardTop + this.boardHeight - this.lineWidth);
-        }
-        this.cvs.strokeStyle = this.lineColor;
-        this.cvs.stroke();
-
-        //frame
-        this.cvs.beginPath();
-        this.cvs.moveTo(this.boardLeft, this.boardTop);
-        this.cvs.lineTo(this.boardLeft + this.boardWidth - 1, this.boardTop);
-        this.cvs.lineTo(this.boardLeft + this.boardWidth - 1, this.boardTop + this.boardHeight - 1);
-        this.cvs.lineTo(this.boardLeft, this.boardTop + this.boardHeight - 1);
-        this.cvs.lineTo(this.boardLeft, this.boardTop);
-        this.cvs.strokeStyle = this.frameColor;
-        this.cvs.stroke();
-        };
-
-        Painter.prototype.drawNextBlock = function drawNextBlock() {
-        this.cvs.beginPath();
-        this.cvs.lineWidth = this.lineWidth;
-        var left = this.boardLeft + this.boardWidth + 2 * this.cubeSize,
-        top = this.boardTop,
-        horizontalCubes = 4,
-        verticalCubes = 4,
-        height = horizontalCubes * (this.cubeSize + this.lineWidth) + this.lineWidth,
-        width = verticalCubes * (this.cubeSize + this.lineWidth) + this.lineWidth;
-
-        // horizontal lines
-        for (var i = 0; i <= 4; i++) {
-        this.cvs.moveTo(left, top + i * (this.cubeSize + this.lineWidth));
-        this.cvs.lineTo(left + width - this.lineWidth, top + i * (this.cubeSize + this.lineWidth));
-        }
-        // vertical lines
-        for (var i = 0; i <= 4; i++) {
-        this.cvs.moveTo(left + i * (this.cubeSize + this.lineWidth), top);
-        this.cvs.lineTo(left + i * (this.cubeSize + this.lineWidth), top + height - this.lineWidth);
-        }
-        this.cvs.strokeStyle = this.lineColor;
-        this.cvs.stroke();
-        if (this.board.nextBlock) {
-        var nodes = this.board.nextBlock.getNodes(),
-        minX = 99,
-        minY = 99,
-        maxX = 0,
-        maxY = 0;
-        for (var i in nodes) {
-        minX = minX > nodes[i].x ? nodes[i].x : minX;
-        maxX = maxX < nodes[i].x ? nodes[i].x : maxX;
-        minY = minY > nodes[i].y ? nodes[i].y : minY;
-        maxY = maxY < nodes[i].y ? nodes[i].y : maxY;
-        }
-        for (var i in nodes) {
-        nodes[i].x = nodes[i].x - minX + Math.ceil((4 - (maxX - minX + 1)) / 2);
-        nodes[i].y = nodes[i].y - minY + Math.ceil((4 - (maxY - minY + 1)) / 2);
-        this.drawNode(top, left, this.cubeSize, this.lineWidth, nodes[i]);
-        }
-        }
-        };
-
-        Painter.prototype.drawBlock = function drawBlock() {
-        var _this = this;
-
-        //log(`draw block ${this.block.type}`)
-        var nodes = [];
-        this.board.block.getNodes().forEach(function (node) {
-        return nodes.push(node);
-        });
-        nodes.forEach(function (node) {
-        if (node.y >= 0) {
-        _this.drawNode(_this.boardTop, _this.boardLeft, _this.cubeSize, _this.lineWidth, node);
-        }
-        });
-        };
-
-        Painter.prototype.drawNode = function drawNode(top, left, cubeSize, lineWidth, node) {
-        var lineFix = -lineWidth / 2;
-        this.cvs.fillStyle = node.color;
-        this.cvs.fillRect(left + node.x * (cubeSize + lineWidth) + lineWidth + lineFix, top + node.y * (cubeSize + lineWidth) + lineWidth + lineFix, cubeSize, cubeSize);
-        cvs.fillStyle = config.colors.bg;
-        cvs.fillRect(left + node.x * (cubeSize + lineWidth) + cubeSize * 3 / 10 + lineWidth + lineFix, top + node.y * (cubeSize + lineWidth) + cubeSize * 3 / 10 + lineWidth + lineFix, cubeSize * 6 / 15, cubeSize * 6 / 15);
-        };
-
-        Painter.prototype.drawNodes = function drawNodes() {
-        var _this2 = this;
-
-        this.board.nodes.forEach(function (node) {
-        if (node.y >= 0) {
-        _this2.drawNode(_this2.boardTop, _this2.boardLeft, _this2.cubeSize, _this2.lineWidth, node);
-        }
-        });
-        };
-
-        Painter.prototype.displayFPS = function displayFPS() {
-        var lastTime = lastFrameTime;
-        lastFrameTime = Date.now();
-        if (Math.floor(lastFrameTime / 1000) - Math.floor(lastTime / 1000) > 0) {
-        fps = 1000 / (lastFrameTime - lastTime || 0);
-        }
-        this.cvs.fillStyle = config.textColor;
-        this.cvs.font = config.cubeSize * .8 + "px Consolas";
-        this.cvs.textBaseline = "bottom";
-        this.cvs.fillText("FPS: " + Math.floor(fps * 10) / 10, this.boardLeft, this.boardTop - 3);
-        };
-
-        Painter.prototype.displayScore = function displayScore() {
-        this.cvs.fillStyle = config.textColor;
-        this.cvs.font = config.cubeSize * 1.4 + "px Consolas";
-        this.cvs.textBaseline = "bottom";
-        this.cvs.fillText("HIGHEST: " + this.board.highest, this.boardLeft + this.boardWidth + this.cubeSize * 2, this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 2 * this.cubeSize);
-        this.cvs.fillText("SCORE: " + this.board.score, this.boardLeft + this.boardWidth + this.cubeSize * 2, this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 4 * this.cubeSize);
-        this.cvs.fillText("LINES: " + (this.board.lines || 0), this.boardLeft + this.boardWidth + this.cubeSize * 2, this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 6 * this.cubeSize);
-        this.cvs.fillText("LEVEL: " + (this.board.level || 0), this.boardLeft + this.boardWidth + this.cubeSize * 2, this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 8 * this.cubeSize);
-        };
-
-        Painter.prototype.draw = function draw() {
-        this.cvs.clearRect(0, 0, W, H);
-        this.drawBoard();
-        this.drawBlock();
-        this.drawNodes();
-        this.drawNextBlock();
-        this.displayFPS();
-        this.displayScore();
-        };
-
-        return Painter;
-        }();
-
-        var Board = function () {
-        function Board(cfg, cvs) {
-        _classCallCheck(this, Board);
-
-        this.boardHorizontalCubes = cfg.boardHorizontalCubes;
-        this.boardVerticalCubes = cfg.boardVerticalCubes;
-        this.firstMove = true;
-        // block
-        this.block;
-        this.nextBlock;
-        // nodes
-        this.nodes = [];
-
-        //score
-        this.highest = 0;
-        this.score = 0;
-        this.lines = 0;
-        this.level = 1;
-        }
-
-        Board.prototype.randomBlock = function randomBlock() {
-        var blockType = BlockType[Math.floor(Math.random() * BlockType.length)];
-        switch (blockType) {
-        case "O":
-        this.nextBlock = new BlockO(this, this.boardHorizontalCubes / 2 - 1, -2);
-        break;
-        case "I":
-        this.nextBlock = new BlockI(this, this.boardHorizontalCubes / 2 - 1, -1);
-        break;
-        case "S":
-        this.nextBlock = new BlockS(this, this.boardHorizontalCubes / 2 - 1, -2);
-        break;
-        case "Z":
-        this.nextBlock = new BlockZ(this, this.boardHorizontalCubes / 2 - 1, -2);
-        break;
-        case "L":
-        this.nextBlock = new BlockL(this, this.boardHorizontalCubes / 2 - 1, -2);
-        break;
-        case "J":
-        this.nextBlock = new BlockJ(this, this.boardHorizontalCubes / 2 - 1, -2);
-        break;
-        case "T":
-        this.nextBlock = new BlockT(this, this.boardHorizontalCubes / 2 - 1, -2);
-        break;
-        }
-        };
-
-        Board.prototype.addBlock = function addBlock() {
-        //log(`add Block \'${blockType}\'`)
-        this.block = this.nextBlock;
-        this.randomBlock();
-        this.firstMove = true;
-        };
-
-        Board.prototype.settleBlock = function settleBlock() {
-        var _this3 = this;
-
-        this.block.getNodes().forEach(function (node) {
-        if (node.y >= 0) {
-        _this3.nodes.push(node);
-        }
-        });
-        this.ridLine();
-        this.addBlock();
-        };
-
-        Board.prototype.ridLine = function ridLine() {
-        var _this4 = this;
-
-        var count = new Array(config.boardVerticalCubes);
-        count.fill(0);
-        this.nodes.forEach(function (n) {
-        count[n.y] += 1;
-        });
-
-        // score & lines
-        var lines = 0,
-        score = 0;
-        count.forEach(function (c, index) {
-        if (c == config.boardHorizontalCubes) {
-        (function () {
-        lines++;
-        var newNodes = [];
-        _this4.nodes.forEach(function (n) {
-            if (n.y < index) {
-            n.y++;
-            newNodes.push(n);
+        const config = {
+          colors: {
+            light:{
+              bg: "#fff",
+              canvasBg:"#fafafa",
+              border:"#f0f0f0",
+              O: [0,70,65], //[0,70,65] 
+              I: [35,70,65],
+              Z: [70,70,65],
+              S: [105,70,65],
+              J: [140,70,65],
+              L: [175,70,65],
+              T: [200,70,65],
+              textColor: "#888",
+              lineColor: "#ddd",
+              frameColor: "#aaa"
+            },
+            dark:{
+              bg: "#222",
+              canvasBg:"#181818",
+              border:"#333",
+              O: [0,25,30],
+              I: [35,25,30],
+              Z: [70,25,30],
+              S: [105,25,30],
+              J: [140,25,30],
+              L: [175,25,30],
+              T: [200,25,30],
+              textColor: "#666",
+              lineColor: "#222",
+              frameColor: "#333"
             }
-            if (n.y > index) {
-            newNodes.push(n);
+          },
+          cubeSize: 12,
+          fontSize: 1.2,
+          font: 'Courier New',
+          displayFps: false,
+          lineWidth: 1,
+          boardHorizontalCubes: 10,
+          boardVerticalCubes: 20,
+          scoreForLines:[0,10,25,45,60]
+        };
+        const direction = {
+          up: 0,
+          right: 1,
+          down: 2,
+          left: 3
+        };
+        const BlockType = ["S", "Z", "L", "J", "I", "O", "T"];
+        const HIGHSCORE = 'highScore';
+        const RID_DELAY = 200;
+        
+        let colorsTheme = config.colors.light;
+        
+        let lastFrameTime = 0;
+        let fps=0;
+        
+        let log = x => {
+          if (debug) {
+            console.log(x);
+          }
+        };
+        
+        class Painter {
+          constructor(cfg, cvs, board) {
+            this.cubeSize = cfg.cubeSize;
+            this.lineWidth = cfg.lineWidth;
+            this.boardHorizontalCubes = cfg.boardHorizontalCubes;
+            this.boardVerticalCubes = cfg.boardVerticalCubes;
+            this.boardHeight =
+              cfg.boardVerticalCubes * cfg.cubeSize +
+              (cfg.boardVerticalCubes + 1) * cfg.lineWidth;
+            this.boardWidth =
+              cfg.boardHorizontalCubes * cfg.cubeSize +
+              (cfg.boardHorizontalCubes + 1) * cfg.lineWidth;
+            this.boardTop = Math.floor((H - this.boardHeight) / 2);
+            this.boardLeft = 10; //Math.floor((W - this.boardWidth) / 2);
+            this.cvs = cvs;
+            this.board = board;
+          }
+          drawBoard() {
+            //log('draw board')
+            this.cvs.beginPath();
+            this.cvs.lineWidth = this.lineWidth;
+        
+            // horizontal lines
+            for (let i = 0; i <= this.boardVerticalCubes; i++) {
+              this.cvs.moveTo(
+                this.boardLeft,
+                this.boardTop + i * (this.cubeSize + this.lineWidth)
+              );
+              this.cvs.lineTo(
+                this.boardLeft + this.boardWidth - this.lineWidth,
+                this.boardTop + i * (this.cubeSize + this.lineWidth)
+              );
             }
-        });
-        _this4.nodes = newNodes;
-        })();
+            // vertical lines
+            for (let i = 0; i <= this.boardHorizontalCubes; i++) {
+              this.cvs.moveTo(
+                this.boardLeft + i * (this.cubeSize + this.lineWidth),
+                this.boardTop
+              );
+              this.cvs.lineTo(
+                this.boardLeft + i * (this.cubeSize + this.lineWidth),
+                this.boardTop + this.boardHeight - this.lineWidth
+              );
+            }
+            this.cvs.strokeStyle = colorsTheme.lineColor;
+            this.cvs.stroke();
+        
+            //frame
+            this.cvs.beginPath();
+            this.cvs.moveTo(this.boardLeft, this.boardTop);
+            this.cvs.lineTo(this.boardLeft + this.boardWidth - 1, this.boardTop);
+            this.cvs.lineTo(
+              this.boardLeft + this.boardWidth - 1,
+              this.boardTop + this.boardHeight - 1
+            );
+            this.cvs.lineTo(this.boardLeft, this.boardTop + this.boardHeight - 1);
+            this.cvs.lineTo(this.boardLeft, this.boardTop);
+            this.cvs.strokeStyle = colorsTheme.frameColor;
+            this.cvs.stroke();
+          }
+          drawNextBlock() {
+            this.cvs.beginPath();
+            this.cvs.lineWidth = this.lineWidth;
+            let left = this.boardLeft + this.boardWidth + 2 * this.cubeSize,
+              top = this.boardTop,
+              horizontalCubes = 4,
+              verticalCubes = 4,
+              height =
+                horizontalCubes * (this.cubeSize + this.lineWidth) + this.lineWidth,
+              width = verticalCubes * (this.cubeSize + this.lineWidth) + this.lineWidth;
+        
+            // horizontal lines
+            for (let i = 0; i <= 4; i++) {
+              this.cvs.moveTo(left, top + i * (this.cubeSize + this.lineWidth));
+              this.cvs.lineTo(
+                left + width - this.lineWidth,
+                top + i * (this.cubeSize + this.lineWidth)
+              );
+            }
+            // vertical lines
+            for (let i = 0; i <= 4; i++) {
+              this.cvs.moveTo(left + i * (this.cubeSize + this.lineWidth), top);
+              this.cvs.lineTo(
+                left + i * (this.cubeSize + this.lineWidth),
+                top + height - this.lineWidth
+              );
+            }
+            this.cvs.strokeStyle = colorsTheme.lineColor;
+            this.cvs.stroke();
+            if (this.board.nextBlock) {
+              let nodes = this.board.nextBlock.getNodes(),
+                minX = 99,
+                minY = 99,
+                maxX = 0,
+                maxY = 0;
+              for (let i in nodes) {
+                minX = minX > nodes[i].x ? nodes[i].x : minX;
+                maxX = maxX < nodes[i].x ? nodes[i].x : maxX;
+                minY = minY > nodes[i].y ? nodes[i].y : minY;
+                maxY = maxY < nodes[i].y ? nodes[i].y : maxY;
+              }
+              for (let i in nodes) {
+                nodes[i].x = nodes[i].x - minX + Math.ceil((4 - (maxX - minX + 1)) / 2);
+                nodes[i].y = nodes[i].y - minY + Math.ceil((4 - (maxY - minY + 1)) / 2);
+                this.drawNode(top, left, this.cubeSize, this.lineWidth, nodes[i]);
+              }
+            }
+          }
+        
+          drawBlock() {
+            //log(`draw block ${this.block.type}`)
+            let nodes = [];
+            this.board.block.getNodes().forEach(node => nodes.push(node));
+            nodes.forEach(node => {
+              if (node.y >= 0) {
+                this.drawNode(
+                  this.boardTop,
+                  this.boardLeft,
+                  this.cubeSize,
+                  this.lineWidth,
+                  node
+                );
+              }
+            });
+          }
+          drawNode(top, left, cubeSize, lineWidth, node) {
+            let lineFix = -lineWidth / 2;
+            let light = colorsTheme[node.type][2];
+            if(this.board.ridLinesTimer[node.y] > 0){
+              if(colorsTheme == config.colors.light){
+                light+=Math.ceil((Date.now() - this.board.ridLinesTimer[node.y])/5);
+              } else {
+                light-=Math.ceil((Date.now() - this.board.ridLinesTimer[node.y])/8);
+              }
+            }
+            if(light > 100){
+              light = 100;
+            }
+            this.cvs.strokeStyle = `hsl(${colorsTheme[node.type][0]},${colorsTheme[node.type][1]}%,${light}%)`;
+            this.cvs.beginPath();
+            this.cvs.rect(left + node.x * (cubeSize + lineWidth) + lineWidth + lineFix+cubeSize/6,
+                         top + node.y * (cubeSize + lineWidth) + lineWidth + lineFix+cubeSize/6,cubeSize*2/3,cubeSize*2/3);
+            this.cvs.lineWidth = cubeSize/3;    
+            this.cvs.stroke();
+          }
+        
+          drawNodes() {
+            this.board.nodes.forEach(node => {
+              if (node.y >= 0) {
+                this.drawNode(
+                  this.boardTop,
+                  this.boardLeft,
+                  this.cubeSize,
+                  this.lineWidth,
+                  node
+                );
+              }
+            });
+          }
+          displayFPS() {
+              if(!config.displayFps){
+                  return;
+              }
+            let lastTime = lastFrameTime;
+            lastFrameTime = Date.now();
+            if(Math.floor(lastFrameTime/1000) - Math.floor(lastTime/1000) > 0){
+              fps = 1000 / (lastFrameTime - lastTime || 0);      
+            }
+            this.cvs.fillStyle = colorsTheme.textColor;
+            this.cvs.font = config.fontStyle;
+            this.cvs.textBaseline = "bottom";
+            this.cvs.fillText(
+              `FPS: ${Math.floor(fps * 10) / 10}`,
+              this.boardLeft,
+              this.boardTop - 3
+            );
+          }
+          displayScore() {
+            this.cvs.fillStyle = colorsTheme.textColor;
+            this.cvs.font = config.fontStyle;
+            this.cvs.textBaseline = "bottom";
+            this.cvs.fillText(
+              `H-SCORE: ${this.board.highScore || 0}`,
+              this.boardLeft + this.boardWidth + this.cubeSize * 2,
+              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 4 * this.cubeSize
+            );
+            this.cvs.fillText(
+              `SCORE: ${this.board.score || 0}`,
+              this.boardLeft + this.boardWidth + this.cubeSize * 2,
+              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 6 * this.cubeSize
+            );
+            this.cvs.fillText(
+              `LINES: ${this.board.lines || 0}`,
+              this.boardLeft + this.boardWidth + this.cubeSize * 2,
+              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 8 * this.cubeSize
+            );
+            this.cvs.fillText(
+              `LEVEL: ${this.board.level || 1}`,
+              this.boardLeft + this.boardWidth + this.cubeSize * 2,
+              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 10 * this.cubeSize
+            );
+          }
+          draw() {
+            this.cvs.clearRect(0, 0, W, H);
+            this.drawBoard();
+            this.drawBlock();
+            this.drawNodes();
+            this.drawNextBlock();
+            this.displayFPS();
+            this.displayScore();
+          }
         }
-        });
-        this.lines += lines;
-        this.level = Math.floor(this.lines / 10);
-        switch (lines) {
-        case 1:
-        this.score += 10;
-        break;
-        case 2:
-        this.score += 25;
-        break;
-        case 3:
-        this.score += 60;
-        break;
-        case 4:
-        this.score += 100;
-        break;
-        }
-        this.highest = this.score > this.highest ? this.score : this.highest;
-        };
+        
+        class Board {
+          constructor(cfg, cvs) {
+            this.boardHorizontalCubes = cfg.boardHorizontalCubes;
+            this.boardVerticalCubes = cfg.boardVerticalCubes;
+            this.firstMove = true;
+            // block
+            this.block;
+            this.nextBlock;
+            // nodes
+            this.nodes = [];
+        
+            //score            
+            this.highScore = localStorage.getItem(HIGHSCORE) || 0;
+            this.score = 0;
+            this.lines = 0;
+            this.level = 1;
+            this.ridLinesTimer = new Array(config.boardVerticalCubes);
+            this.ridLinesTimer.fill(0);
+          }
+        
+          randomBlock() {
+            let blockType = BlockType[Math.floor(Math.random() * BlockType.length)];
+            switch (blockType) {
+              case "O":
+                this.nextBlock = new BlockO(
+                  this,
+                  this.boardHorizontalCubes / 2 - 1,
+                  -2
+                );
+                break;
+              case "I":
+                this.nextBlock = new BlockI(
+                  this,
+                  this.boardHorizontalCubes / 2 - 1,
+                  -1
+                );
+                break;
+              case "S":
+                this.nextBlock = new BlockS(
+                  this,
+                  this.boardHorizontalCubes / 2 - 1,
+                  -2
+                );
+                break;
+              case "Z":
+                this.nextBlock = new BlockZ(
+                  this,
+                  this.boardHorizontalCubes / 2 - 1,
+                  -2
+                );
+                break;
+              case "L":
+                this.nextBlock = new BlockL(
+                  this,
+                  this.boardHorizontalCubes / 2 - 1,
+                  -2
+                );
+                break;
+              case "J":
+                this.nextBlock = new BlockJ(
+                  this,
+                  this.boardHorizontalCubes / 2 - 1,
+                  -2
+                );
+                break;
+              case "T":
+                this.nextBlock = new BlockT(
+                  this,
+                  this.boardHorizontalCubes / 2 - 1,
+                  -2
+                );
+                break;
+            }
+          }
+          addBlock() {
+            //log(`add Block \'${blockType}\'`)
+            this.block = this.nextBlock;
+            this.randomBlock();
+            this.firstMove = true;
+          }
+          settleBlock() {
+            this.block.getNodes().forEach(node => {
+              if (node.y >= 0) {
+                this.nodes.push(node);
+              }
+            });
+            this.ridLine();
+            this.addBlock();
+          }
+          ridLine() {
+            let rowCount = new Array(config.boardVerticalCubes);
+            rowCount.fill(0);
+            this.nodes.forEach(n => {
+              rowCount[n.y] += 1;
+            });
+        
+            // score & lines
+            let ridLinesCount = 0,
+              score = 0;
+            let newNodes = new Array();
+            let rowsToRemove = new Array(config.boardVerticalCubes);
+            let now = Date.now();
+            rowCount.forEach((c,index)=>{
+              if(c == config.boardHorizontalCubes){
+                if(this.ridLinesTimer[index] > 0 && (this.ridLinesTimer[index] + RID_DELAY < now)){
+                  rowsToRemove.push(index);
+                  ridLinesCount++;
+                } else if(this.ridLinesTimer[index] == 0) {
+                    this.ridLinesTimer[index] = now;
+                }
+              }
+            });
 
-        Board.prototype.canMove = function canMove(d) {
-        var nodes = this.block.getNodes();
-        for (var i in nodes) {
-        var node = nodes[i];
-        var x = undefined,
-        y = undefined;
-        switch (d) {
-        case direction.left:
-        x = node.x - 1;
-        y = node.y;
-        break;
-        case direction.right:
-        x = node.x + 1;
-        y = node.y;
-        break;
-        case direction.down:
-        x = node.x;
-        y = node.y + 1;
-        break;
-        }
-        if (x < 0 || x > config.boardHorizontalCubes - 1 || y > config.boardVerticalCubes - 1) {
-        return false;
-        }
+            this.nodes.forEach(n => {
+              if(rowsToRemove.indexOf(n.y) < 0 ){
+                newNodes.push(n);
+              }
+            });
 
-        for (var j in this.nodes) {
-        var n = this.nodes[j];
-        if (n.x == x && n.y == y) {
-        return false;
-        }
-        }
-        }
-        return true;
-        };
+            rowsToRemove.forEach(r =>{
+              newNodes.forEach(n=>{
+                if(n.y < r){
+                  n.y++;
+                }
+              });
+              this.ridLinesTimer[r] = 0
+            });
 
-        Board.prototype.isEmpty = function isEmpty(nodes) {
-        for (var i in nodes) {
-        var node = nodes[i];
-        if (node.x < 0 || node.x > this.boardHorizontalCubes - 1 || this.y > this.boardVerticalCubes - 1) {
-        return false;
+            this.nodes = newNodes;
+            this.lines += ridLinesCount;
+            this.level = Math.floor(this.lines / 10);
+            this.score += config.scoreForLines[ridLinesCount];
+            this.highScore = this.score > this.highScore ? this.score : this.highScore;
+            localStorage.setItem(HIGHSCORE,this.highScore);
+          }
+          canMove(d) {
+            let nodes = this.block.getNodes();
+            for (let i in nodes) {
+              let node = nodes[i];
+              let x, y;
+              switch (d) {
+                case direction.left:
+                  x = node.x - 1;
+                  y = node.y;
+                  break;
+                case direction.right:
+                  x = node.x + 1;
+                  y = node.y;
+                  break;
+                case direction.down:
+                  x = node.x;
+                  y = node.y + 1;
+                  break;
+              }
+              if (
+                x < 0 ||
+                x > config.boardHorizontalCubes - 1 ||
+                y > config.boardVerticalCubes - 1
+              ) {
+                return false;
+              }
+        
+              for (let j in this.nodes) {
+                let n = this.nodes[j];
+                if (n.x == x && n.y == y) {
+                  return false;
+                }
+              }
+            }
+            return true;
+          }
+          isEmpty(nodes) {
+            for (let i in nodes) {
+              let node = nodes[i];
+              if (
+                node.x < 0 ||
+                node.x > this.boardHorizontalCubes - 1 ||
+                this.y > this.boardVerticalCubes - 1
+              ) {
+                return false;
+              }
+              for (let j in this.nodes) {
+                if (this.nodes[j].x == node.x && this.nodes[j].y == node.y) {
+                  return false;
+                }
+              }
+            }
+            return true;
+          }
+          moveBlock(d) {
+            if (this.canMove(d)) {
+              switch (d) {
+                case direction.left:
+                  this.block.x--;
+                  break;
+                case direction.right:
+                  this.block.x++;
+                  break;
+                case direction.down:
+                  this.block.y++;
+                  break;
+              }
+              this.firstMove = false;
+            } else {
+              if (this.firstMove) {
+                this.nodes = [];
+                this.score = 0;
+                this.lines = 0;
+              }
+              if (direction.down == d) {
+                this.settleBlock();
+                return true;
+              }
+            }
+          }
         }
-        for (var j in this.nodes) {
-        if (this.nodes[j].x == node.x && this.nodes[j].y == node.y) {
-        return false;
+        
+        class Node {
+          constructor(x, y, t) {
+            this.x = x;
+            this.y = y;
+            this.type = t;
+            this.deadTimer = 0;
+          }
         }
+        
+        class Block {
+          constructor(board, x, y) {
+            this.board = board;
+            this.x = x;
+            this.y = y;
+            this.direction = direction.up;
+          }
+          rotateClockwise() {}
+          rotateAnticlockwise() {}
+          turn(isClockwise) {}
         }
-        }
-        return true;
-        };
-
-        Board.prototype.moveBlock = function moveBlock(d) {
-        if (this.canMove(d)) {
-        switch (d) {
-        case direction.left:
-        this.block.x--;
-        break;
-        case direction.right:
-        this.block.x++;
-        break;
-        case direction.down:
-        this.block.y++;
-        break;
-        }
-        this.firstMove = false;
-        } else {
-        if (this.firstMove) {
-        this.nodes = [];
-        this.score = 0;
-        this.lines = 0;
-        }
-        if (direction.down == d) {
-        this.settleBlock();
-        return true;
-        }
-        }
-        };
-
-        return Board;
-        }();
-
-        var Node = function Node(x, y, c) {
-        _classCallCheck(this, Node);
-
-        this.x = x;
-        this.y = y;
-        this.color = c || config.cubeColor;
-        this.deadTime = 0;
-        };
-
-        var Block = function () {
-        function Block(board, x, y) {
-        _classCallCheck(this, Block);
-
-        this.board = board;
-        this.x = x;
-        this.y = y;
-        this.direction = direction.up;
-        }
-
-        Block.prototype.rotateClockwise = function rotateClockwise() {};
-
-        Block.prototype.rotateAnticlockwise = function rotateAnticlockwise() {};
-
-        Block.prototype.turn = function turn(isClockwise) {};
-
-        return Block;
-        }();
-
+        
         // 0 0 0
         // 0 * 1
         // 0 1 1
-
-        var BlockO = function (_Block) {
-        _inherits(BlockO, _Block);
-
-        function BlockO(board, x, y) {
-        _classCallCheck(this, BlockO);
-
-        var _this5 = _possibleConstructorReturn(this, _Block.call(this, board, x, y));
-
-        _this5.type = "O";
-        _this5.color = config.colors.o;
-        return _this5;
+        class BlockO extends Block {
+          constructor(board, x, y) {
+            super(board, x, y);
+            this.type = "O";
+            this.color = colorsTheme.o;
+          }
+          getNodes() {
+            return [
+              new Node(this.x, this.y, this.type),
+              new Node(this.x + 1, this.y, this.type),
+              new Node(this.x, this.y + 1, this.type),
+              new Node(this.x + 1, this.y + 1, this.type)
+            ];
+          }
         }
-
-        BlockO.prototype.getNodes = function getNodes() {
-        return [new Node(this.x, this.y, this.color), new Node(this.x + 1, this.y, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x + 1, this.y + 1, this.color)];
-        };
-
-        return BlockO;
-        }(Block);
-
-        var BlockI = function (_Block2) {
-        _inherits(BlockI, _Block2);
-
-        function BlockI(board, x, y) {
-        _classCallCheck(this, BlockI);
-
-        var _this6 = _possibleConstructorReturn(this, _Block2.call(this, board, x, y));
-
-        _this6.type = "I";
-        _this6.color = config.colors.i;
-
-        _this6.isVertical = true; // true or false horizontal or vertical
-        return _this6;
-        }
-
-        BlockI.prototype.getNodes = function getNodes() {
-        if (this.isVertical) {
-        return [new Node(this.x, this.y, this.color), new Node(this.x, this.y - 1, this.color), new Node(this.x, this.y - 2, this.color), new Node(this.x, this.y - 3, this.color)];
-        } else {
-        return [new Node(this.x, this.y, this.color), new Node(this.x - 1, this.y, this.color), new Node(this.x - 2, this.y, this.color), new Node(this.x + 1, this.y, this.color)];
-        }
-        };
-
-        BlockI.prototype.turn = function turn() {
-        var x = this.x,
-        y = this.y,
-        isVertical = this.isVertical;
-        this.isVertical = !this.isVertical;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x + 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x + 2;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x - 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-
-        this.x = x;
-        this.y = y;
-        this.isVertical = isVertical;
-        };
-
-        return BlockI;
-        }(Block);
-
-        var BlockS = function (_Block3) {
-        _inherits(BlockS, _Block3);
-
-        function BlockS(board, x, y) {
-        _classCallCheck(this, BlockS);
-
-        var _this7 = _possibleConstructorReturn(this, _Block3.call(this, board, x, y));
-
-        _this7.type = "S";
-        _this7.color = config.colors.s;
-
-        _this7.isVertical = true; // true or false horizontal or vertical
-        return _this7;
-        }
-
-        BlockS.prototype.getNodes = function getNodes() {
-        if (this.isVertical) {
-        return [new Node(this.x - 1, this.y, this.color), new Node(this.x - 1, this.y - 1, this.color), new Node(this.x, this.y, this.color), new Node(this.x, this.y + 1, this.color)];
-        } else {
-        return [new Node(this.x, this.y, this.color), new Node(this.x + 1, this.y, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x - 1, this.y + 1, this.color)];
-        }
-        };
-
-        BlockS.prototype.turn = function turn() {
-        var x = this.x,
-        y = this.y,
-        isVertical = this.isVertical;
-        this.isVertical = !this.isVertical;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x + 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x - 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-
-        this.x = x;
-        this.y = y;
-        this.isVertical = isVertical;
-        };
-
-        return BlockS;
-        }(Block);
-
-        var BlockZ = function (_Block4) {
-        _inherits(BlockZ, _Block4);
-
-        function BlockZ(board, x, y) {
-        _classCallCheck(this, BlockZ);
-
-        var _this8 = _possibleConstructorReturn(this, _Block4.call(this, board, x, y));
-
-        _this8.type = "Z";
-        _this8.color = config.colors.z;
-
-        _this8.isVertical = true; // true or false horizontal or vertical
-        return _this8;
-        }
-
-        BlockZ.prototype.getNodes = function getNodes() {
-        if (this.isVertical) {
-        return [new Node(this.x, this.y, this.color), new Node(this.x + 1, this.y, this.color), new Node(this.x + 1, this.y - 1, this.color), new Node(this.x, this.y + 1, this.color)];
-        } else {
-        return [new Node(this.x, this.y, this.color), new Node(this.x - 1, this.y, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x + 1, this.y + 1, this.color)];
-        }
-        };
-
-        BlockZ.prototype.turn = function turn() {
-        var x = this.x,
-        y = this.y,
-        isVertical = this.isVertical;
-        this.isVertical = !this.isVertical;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x + 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x - 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-
-        this.x = x;
-        this.y = y;
-        this.isVertical = isVertical;
-        };
-
-        return BlockZ;
-        }(Block);
-
-        var BlockL = function (_Block5) {
-        _inherits(BlockL, _Block5);
-
-        function BlockL(board, x, y) {
-        _classCallCheck(this, BlockL);
-
-        var _this9 = _possibleConstructorReturn(this, _Block5.call(this, board, x, y));
-
-        _this9.type = "Z";
-        _this9.color = config.colors.j;
-
-        _this9.direction = 0; // true or false horizontal or vertical
-        return _this9;
-        }
-
-        BlockL.prototype.getNodes = function getNodes() {
-        switch (this.direction) {
-        // 0 1 0
-        // 0 * 0
-        // 0 1 1
-        case 0:
-        return [new Node(this.x, this.y, this.color), new Node(this.x, this.y - 1, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x + 1, this.y + 1, this.color)];
-        // 0 0 0
-        // 1 * 1
-        // 1 0 0
-        case 1:
-        return [new Node(this.x, this.y, this.color), new Node(this.x + 1, this.y, this.color), new Node(this.x - 1, this.y, this.color), new Node(this.x - 1, this.y + 1, this.color)];
-        // 1 1 0
-        // 0 * 0
-        // 0 1 0
-        case 2:
-        return [new Node(this.x, this.y, this.color), new Node(this.x, this.y - 1, this.color), new Node(this.x - 1, this.y - 1, this.color), new Node(this.x, this.y + 1, this.color)];
-        // 0 0 0
-        // 0 * 1
-        // 1 1 1
-        case 3:
-        return [new Node(this.x + 1, this.y, this.color), new Node(this.x + 1, this.y + 1, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x - 1, this.y + 1, this.color)];
-        }
-        };
-
-        BlockL.prototype.turn = function turn(isClockwise) {
-        var x = this.x,
-        y = this.y,
-        direction = this.direction;
-        if (isClockwise) {
-        this.direction = (this.direction + 3) % 4;
-        } else {
-        this.direction = (this.direction + 1) % 4;
-        }
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x + 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x - 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        };
-
-        return BlockL;
-        }(Block);
-
-        var BlockJ = function (_Block6) {
-        _inherits(BlockJ, _Block6);
-
-        function BlockJ(board, x, y) {
-        _classCallCheck(this, BlockJ);
-
-        var _this10 = _possibleConstructorReturn(this, _Block6.call(this, board, x, y));
-
-        _this10.type = "J";
-        _this10.color = config.colors.j;
-
-        _this10.direction = 0; // true or false horizontal or vertical
-        return _this10;
-        }
-
-        BlockJ.prototype.getNodes = function getNodes() {
-        switch (this.direction) {
-        // 0 1 0
-        // 0 * 0
-        // 1 1 0
-        case 0:
-        return [new Node(this.x, this.y, this.color), new Node(this.x, this.y - 1, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x - 1, this.y + 1, this.color)];
-        // 0 0 0
-        // 1 * 0
-        // 1 1 1
-        case 1:
-        return [new Node(this.x - 1, this.y, this.color), new Node(this.x - 1, this.y + 1, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x + 1, this.y + 1, this.color)];
-        // 0 1 1
-        // 0 * 0
-        // 0 1 0
-        case 2:
-        return [new Node(this.x, this.y, this.color), new Node(this.x, this.y - 1, this.color), new Node(this.x + 1, this.y - 1, this.color), new Node(this.x, this.y + 1, this.color)];
-        // 0 0 0
-        // 1 * 1
-        // 0 0 1
-        case 3:
-        return [new Node(this.x - 1, this.y, this.color), new Node(this.x, this.y, this.color), new Node(this.x + 1, this.y, this.color), new Node(this.x + 1, this.y + 1, this.color)];
-        }
-        };
-
-        BlockJ.prototype.turn = function turn(isClockwise) {
-        var x = this.x,
-        y = this.y,
-        direction = this.direction;
-        if (isClockwise) {
-        this.direction = (this.direction + 3) % 4;
-        } else {
-        this.direction = (this.direction + 1) % 4;
-        }
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x + 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x - 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        };
-
-        return BlockJ;
-        }(Block);
-
-        var BlockT = function (_Block7) {
-        _inherits(BlockT, _Block7);
-
-        function BlockT(board, x, y) {
-        _classCallCheck(this, BlockT);
-
-        var _this11 = _possibleConstructorReturn(this, _Block7.call(this, board, x, y));
-
-        _this11.type = "T";
-        _this11.color = config.colors.t;
-
-        _this11.direction = 0; // true or false horizontal or vertical
-        return _this11;
-        }
-
-        BlockT.prototype.getNodes = function getNodes() {
-        switch (this.direction) {
-        // 0 0 0
-        // 0 * 0
-        // 1 1 1
-        case 0:
-        return [new Node(this.x, this.y, this.color), new Node(this.x + 1, this.y + 1, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x - 1, this.y + 1, this.color)];
-        // 0 1 0
-        // 0 * 1
-        // 0 1 0
-        case 1:
-        return [new Node(this.x, this.y, this.color), new Node(this.x + 1, this.y, this.color), new Node(this.x, this.y + 1, this.color), new Node(this.x, this.y - 1, this.color)];
-        // 0 0 0
-        // 1 * 1
-        // 0 1 0
-        case 2:
-        return [new Node(this.x, this.y, this.color), new Node(this.x - 1, this.y, this.color), new Node(this.x + 1, this.y, this.color), new Node(this.x, this.y + 1, this.color)];
-        // 0 1 0
-        // 1 * 0
-        // 0 1 0
-        case 3:
-        return [new Node(this.x - 1, this.y, this.color), new Node(this.x, this.y, this.color), new Node(this.x, this.y - 1, this.color), new Node(this.x, this.y + 1, this.color)];
-        }
-        };
-
-        BlockT.prototype.turn = function turn(isClockwise) {
-        var x = this.x,
-        y = this.y,
-        direction = this.direction;
-        if (isClockwise) {
-        this.direction = (this.direction + 3) % 4;
-        } else {
-        this.direction = (this.direction + 1) % 4;
-        }
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x + 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x - 1;
-        if (this.board.isEmpty(this.getNodes())) {
-        return;
-        }
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        };
-
-        return BlockT;
-        }(Block);
-
-        var Controller = function () {
-        function Controller() {
-        _classCallCheck(this, Controller);
-
-        this.config = {
-        keys: {
-        left: "ArrowLeft",
-        right: "ArrowRight",
-        turn: "ArrowUp",
-        down: "ArrowDown"
-        },
-        keyFirstDelay: 70
-        };
-        this.keys = [];
-        this.board = new Board(config, cvs);
-        this.painter = new Painter(config, cvs, this.board);
-        // board
-        this.keyDelayIds = { left: {}, right: {}, down: {} };
-        this.dropDelay = 1000;
-        this.dropIntervalId = 0;
-        this.paused = false;
-        }
-
-        Controller.prototype.start = function start() {
-        this.initKeys();
-        this.frameLoop();
-        this.board.randomBlock();
-        this.board.addBlock();
-        this.startDrop();
-        };
-
-        Controller.prototype.frameLoop = function frameLoop() {
-        var _this12 = this;
-
-        requestAnimationFrame(function () {
-        _this12.painter.draw();
-        _this12.frameLoop();
-        });
-        };
-
-        Controller.prototype.startDrop = function startDrop() {
-        var _this13 = this;
-
-        this.dropIntervalId = setInterval(function () {
-        if (_this13.board.moveBlock(direction.down)) {
-        _this13.speedUp();
-        window.clearInterval(_this13.dropIntervalId);
-        _this13.startDrop();
-        }
-        }, this.dropDelay);
-        };
-
-        Controller.prototype.speedUp = function speedUp() {
-        this.dropDelay = 1000 - this.board.level * 100;
-        if (this.dropDelay < 250) {
-        this.dropDelay = 250;
-        }
-        };
-
-        Controller.prototype.initKeys = function initKeys() {
-        var _this14 = this;
-
-        window.onkeydown = function (e) {
-        switch (e.code) {
-        case _this14.config.keys.left:
-        if (_this14.keys.left) {
-            return;
-        }
-        _this14.keys.left = true;
-        _this14.board.moveBlock(direction.left);
-        _this14.keyDelayIds.left.timeoutId = setTimeout(function () {
-            if (_this14.keys.left) {
-            _this14.keyDelayIds.left.intervalId = setInterval(function () {
-                _this14.board.moveBlock(direction.left);
-            }, 45);
+        class BlockI extends Block {
+          constructor(board, x, y) {
+            super(board, x, y);
+            this.type = "I";
+            this.color = colorsTheme.i;
+        
+            this.isVertical = true; // true or false horizontal or vertical
+          }
+          getNodes() {
+            if (this.isVertical) {
+              return [
+                new Node(this.x, this.y, this.type),
+                new Node(this.x, this.y - 1, this.type),
+                new Node(this.x, this.y - 2, this.type),
+                new Node(this.x, this.y - 3, this.type)
+              ];
+            } else {
+              return [
+                new Node(this.x, this.y, this.type),
+                new Node(this.x - 1, this.y, this.type),
+                new Node(this.x - 2, this.y, this.type),
+                new Node(this.x + 1, this.y, this.type)
+              ];
             }
-        }, _this14.config.keyFirstDelay);
-        break;
-        case _this14.config.keys.right:
-        if (_this14.keys.right) {
-            return;
-        }
-        _this14.keys.right = true;
-        _this14.board.moveBlock(direction.right);
-        _this14.keyDelayIds.right.timeoutId = setTimeout(function () {
-            if (_this14.keys.right) {
-            _this14.keyDelayIds.right.intervalId = setInterval(function () {
-                _this14.board.moveBlock(direction.right);
-            }, 45);
+          }
+          turn() {
+            let x = this.x,
+              y = this.y,
+              isVertical = this.isVertical;
+            this.isVertical = !this.isVertical;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
             }
-        }, _this14.config.keyFirstDelay);
-        break;
-        case _this14.config.keys.turn:
-        _this14.board.block.turn();
-        break;
-        case _this14.config.keys.down:
-        if (_this14.keys.down) {
-            return;
+            this.x = x + 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x + 2;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x - 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+        
+            this.x = x;
+            this.y = y;
+            this.isVertical = isVertical;
+          }
         }
-        _this14.keys.down = true;
-        _this14.keyDelayIds.down.intervalId = setInterval(function () {
-            _this14.board.moveBlock(direction.down);
-        }, 45);
-        break;
+        class BlockS extends Block {
+          constructor(board, x, y) {
+            super(board, x, y);
+            this.type = "S";
+            this.color = colorsTheme.s;
+        
+            this.isVertical = true; // true or false horizontal or vertical
+          }
+          getNodes() {
+            if (this.isVertical) {
+              return [
+                new Node(this.x - 1, this.y, this.type),
+                new Node(this.x - 1, this.y - 1, this.type),
+                new Node(this.x, this.y, this.type),
+                new Node(this.x, this.y + 1, this.type)
+              ];
+            } else {
+              return [
+                new Node(this.x, this.y, this.type),
+                new Node(this.x + 1, this.y, this.type),
+                new Node(this.x, this.y + 1, this.type),
+                new Node(this.x - 1, this.y + 1, this.type)
+              ];
+            }
+          }
+          turn() {
+            let x = this.x,
+              y = this.y,
+              isVertical = this.isVertical;
+            this.isVertical = !this.isVertical;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x + 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x - 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+        
+            this.x = x;
+            this.y = y;
+            this.isVertical = isVertical;
+          }
         }
-        };
-
-        window.onkeyup = function (e) {
-        log(e);
-        switch (e.code) {
-        case "ArrowLeft":
-        _this14.keys.left = false;
-        window.clearInterval(_this14.keyDelayIds.left.timeoutId);
-        window.clearInterval(_this14.keyDelayIds.left.intervalId);
-        break;
-        case "ArrowRight":
-        _this14.keys.right = false;
-        window.clearInterval(_this14.keyDelayIds.right.timeoutId);
-        window.clearInterval(_this14.keyDelayIds.right.intervalId);
-        break;
-        case "ArrowDown":
-        _this14.keys.down = false;
-        window.clearInterval(_this14.keyDelayIds.down.intervalId);
-        break;
+        class BlockZ extends Block {
+          constructor(board, x, y) {
+            super(board, x, y);
+            this.type = "Z";
+            this.color = colorsTheme.z;
+        
+            this.isVertical = true; // true or false horizontal or vertical
+          }
+          getNodes() {
+            if (this.isVertical) {
+              return [
+                new Node(this.x, this.y, this.type),
+                new Node(this.x + 1, this.y, this.type),
+                new Node(this.x + 1, this.y - 1, this.type),
+                new Node(this.x, this.y + 1, this.type)
+              ];
+            } else {
+              return [
+                new Node(this.x, this.y, this.type),
+                new Node(this.x - 1, this.y, this.type),
+                new Node(this.x, this.y + 1, this.type),
+                new Node(this.x + 1, this.y + 1, this.type)
+              ];
+            }
+          }
+          turn() {
+            let x = this.x,
+              y = this.y,
+              isVertical = this.isVertical;
+            this.isVertical = !this.isVertical;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x + 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x - 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+        
+            this.x = x;
+            this.y = y;
+            this.isVertical = isVertical;
+          }
         }
-        };
-        };
-
-        return Controller;
-        }();
-
+        class BlockL extends Block {
+          constructor(board, x, y) {
+            super(board, x, y);
+            this.type = "Z";
+            this.color = colorsTheme.j;
+        
+            this.direction = 0; // true or false horizontal or vertical
+          }
+          getNodes() {
+            switch (this.direction) {
+              // 0 1 0
+              // 0 * 0
+              // 0 1 1
+              case 0:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x, this.y - 1, this.type),
+                  new Node(this.x, this.y + 1, this.type),
+                  new Node(this.x + 1, this.y + 1, this.type)
+                ];
+              // 0 0 0
+              // 1 * 1
+              // 1 0 0
+              case 1:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x + 1, this.y, this.type),
+                  new Node(this.x - 1, this.y, this.type),
+                  new Node(this.x - 1, this.y + 1, this.type)
+                ];
+              // 1 1 0
+              // 0 * 0
+              // 0 1 0
+              case 2:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x, this.y - 1, this.type),
+                  new Node(this.x - 1, this.y - 1, this.type),
+                  new Node(this.x, this.y + 1, this.type)
+                ];
+              // 0 0 0
+              // 0 * 1
+              // 1 1 1
+              case 3:
+                return [
+                  new Node(this.x + 1, this.y, this.type),
+                  new Node(this.x + 1, this.y + 1, this.type),
+                  new Node(this.x, this.y + 1, this.type),
+                  new Node(this.x - 1, this.y + 1, this.type)
+                ];
+            }
+          }
+          turn(isClockwise) {
+            let x = this.x,
+              y = this.y,
+              direction = this.direction;
+            if (isClockwise) {
+              this.direction = (this.direction + 3) % 4;
+            } else {
+              this.direction = (this.direction + 1) % 4;
+            }
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x + 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x - 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+          }
+        }
+        class BlockJ extends Block {
+          constructor(board, x, y) {
+            super(board, x, y);
+            this.type = "J";
+            this.color = colorsTheme.j;
+        
+            this.direction = 0; // true or false horizontal or vertical
+          }
+          getNodes() {
+            switch (this.direction) {
+              // 0 1 0
+              // 0 * 0
+              // 1 1 0
+              case 0:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x, this.y - 1, this.type),
+                  new Node(this.x, this.y + 1, this.type),
+                  new Node(this.x - 1, this.y + 1, this.type)
+                ];
+              // 0 0 0
+              // 1 * 0
+              // 1 1 1
+              case 1:
+                return [
+                  new Node(this.x - 1, this.y, this.type),
+                  new Node(this.x - 1, this.y + 1, this.type),
+                  new Node(this.x, this.y + 1, this.type),
+                  new Node(this.x + 1, this.y + 1, this.type)
+                ];
+              // 0 1 1
+              // 0 * 0
+              // 0 1 0
+              case 2:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x, this.y - 1, this.type),
+                  new Node(this.x + 1, this.y - 1, this.type),
+                  new Node(this.x, this.y + 1, this.type)
+                ];
+              // 0 0 0
+              // 1 * 1
+              // 0 0 1
+              case 3:
+                return [
+                  new Node(this.x - 1, this.y, this.type),
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x + 1, this.y, this.type),
+                  new Node(this.x + 1, this.y + 1, this.type)
+                ];
+            }
+          }
+          turn(isClockwise) {
+            let x = this.x,
+              y = this.y,
+              direction = this.direction;
+            if (isClockwise) {
+              this.direction = (this.direction + 3) % 4;
+            } else {
+              this.direction = (this.direction + 1) % 4;
+            }
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x + 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x - 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+          }
+        }
+        class BlockT extends Block {
+          constructor(board, x, y) {
+            super(board, x, y);
+            this.type = "T";
+            this.color = colorsTheme.t;
+        
+            this.direction = 0; // true or false horizontal or vertical
+          }
+          getNodes() {
+            switch (this.direction) {
+              // 0 0 0
+              // 0 * 0
+              // 1 1 1
+              case 0:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x + 1, this.y + 1, this.type),
+                  new Node(this.x, this.y + 1, this.type),
+                  new Node(this.x - 1, this.y + 1, this.type)
+                ];
+              // 0 1 0
+              // 0 * 1
+              // 0 1 0
+              case 1:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x + 1, this.y, this.type),
+                  new Node(this.x, this.y + 1, this.type),
+                  new Node(this.x, this.y - 1, this.type)
+                ];
+              // 0 0 0
+              // 1 * 1
+              // 0 1 0
+              case 2:
+                return [
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x - 1, this.y, this.type),
+                  new Node(this.x + 1, this.y, this.type),
+                  new Node(this.x, this.y + 1, this.type)
+                ];
+              // 0 1 0
+              // 1 * 0
+              // 0 1 0
+              case 3:
+                return [
+                  new Node(this.x - 1, this.y, this.type),
+                  new Node(this.x, this.y, this.type),
+                  new Node(this.x, this.y - 1, this.type),
+                  new Node(this.x, this.y + 1, this.type)
+                ];
+            }
+          }
+          turn(isClockwise) {
+            let x = this.x,
+              y = this.y,
+              direction = this.direction;
+            if (isClockwise) {
+              this.direction = (this.direction + 3) % 4;
+            } else {
+              this.direction = (this.direction + 1) % 4;
+            }
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x + 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x - 1;
+            if (this.board.isEmpty(this.getNodes())) {
+              return;
+            }
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+          }
+        }
+        class Controller {
+          constructor() {
+            this.config = {
+              keys: {
+                'ArrowLeft': 'left',
+                'ArrowRight':'right',
+                'ArrowUp':'rotate',
+                'ArrowDown':'down',
+                'KeyA':'left',
+                'KeyD':'right',
+                'KeyW':'rotate',
+                'KeyS':'down'
+              },
+              keyFirstDelay: 70
+            };
+            this.keys = [];
+            this.board = new Board(config, cvs);
+            this.painter = new Painter(config, cvs, this.board);
+            // board
+            this.keyDelayIds = { left: {}, right: {}, down: {} };
+            this.dropDelay = 1000;
+            this.dropIntervalId = 0;
+            this.paused = false;
+          }
+          start() {
+            this.initConfig();
+            this.initKeys();
+            this.frameLoop();
+            this.board.randomBlock();
+            this.board.addBlock();
+            this.startDrop();
+          }
+        
+          frameLoop() {
+            requestAnimationFrame(() => {
+              this.board.ridLine();
+              this.painter.draw();
+              this.frameLoop();
+            });
+          }
+          startDrop() {
+            this.dropIntervalId = setInterval(() => {
+              if (this.board.moveBlock(direction.down)) {
+                this.speedUp();
+                window.clearInterval(this.dropIntervalId);
+                this.startDrop();
+              }
+            }, this.dropDelay);
+          }
+          speedUp() {
+            this.dropDelay = 1000 - this.board.level * 100;
+            if (this.dropDelay < 250) {
+              this.dropDelay = 250;
+            }
+          }
+        
+          initConfig() {
+              config.fontStyle = `${config.cubeSize * config.fontSize}px  ${config.font}`;
+          }
+          initKeys() {
+            window.onkeydown = e => {
+              switch (this.config.keys[e.code]) {
+                case 'left':
+                  if (this.keys.left) {
+                    return;
+                  }
+                  this.keys.left = true;
+                  this.board.moveBlock(direction.left);
+                  this.keyDelayIds.left.timeoutId = setTimeout(() => {
+                    if (this.keys.left) {
+                      this.keyDelayIds.left.intervalId = setInterval(() => {
+                        this.board.moveBlock(direction.left);
+                      }, 45);
+                    }
+                  }, this.config.keyFirstDelay);
+                  break;
+                case 'right':
+                  if (this.keys.right) {
+                    return;
+                  }
+                  this.keys.right = true;
+                  this.board.moveBlock(direction.right);
+                  this.keyDelayIds.right.timeoutId = setTimeout(() => {
+                    if (this.keys.right) {
+                      this.keyDelayIds.right.intervalId = setInterval(() => {
+                        this.board.moveBlock(direction.right);
+                      }, 45);
+                    }
+                  }, this.config.keyFirstDelay);
+                  break;
+                case 'rotate':
+                  this.board.block.turn();
+                  break;
+                case 'down':
+                  if (this.keys.down) {
+                    return;
+                  }
+                  this.keys.down = true;
+                  this.keyDelayIds.down.intervalId = setInterval(() => {
+                    this.board.moveBlock(direction.down);
+                  }, 45);
+                  break;
+              }
+            };
+        
+            window.onkeyup = e => {
+              log(e);
+              switch (this.config.keys[e.code]) {
+                case 'left':
+                  this.keys.left = false;
+                  window.clearInterval(this.keyDelayIds.left.timeoutId);
+                  window.clearInterval(this.keyDelayIds.left.intervalId);
+                  break;
+                case 'right':
+                  this.keys.right = false;
+                  window.clearInterval(this.keyDelayIds.right.timeoutId);
+                  window.clearInterval(this.keyDelayIds.right.intervalId);
+                  break;
+                case 'down':
+                  this.keys.down = false;
+                  window.clearInterval(this.keyDelayIds.down.intervalId);
+                  break;
+              }
+            };
+          }
+        }
         new Controller().start();
-    </script>
-    <script>
-        window.onload=function(){
-            var main = document.getElementsByTagName('main')[0];
-            window.onmousemove=function(e){
-                var max=100;
-                var vx = (e.x/document.body.offsetWidth - 0.5)*max;
-                var vy = (e.y/document.body.offsetHeight - 0.5)*max;
-                main.style.transform = 'translateY(-50%) rotate3D('+ (-vy)+','+(vx)+',0,'+((Math.abs(vx)+Math.abs(vy))*2/10)+'deg) ';
-                var angle=-Math.atan(vy/vx)*180;
-                console.log(angle);
-                main.style.background='linear-gradient('+angle+'deg, rgba(0,0,0,.3), #fff '+((Math.abs(vx)+Math.abs(vy))*5/10)+'%)';
-            }
+        
+        const html = document.getElementsByTagName("html")[0];
+        
+        document.getElementById("theme").onchange = (e) => {
+          if(e.target.checked){
+            colorsTheme = config.colors.light;
+            html.style.backgroundColor=colorsTheme.bg;
+            document.body.style.backgroundColor=colorsTheme.bg;
+            ca.style.backgroundColor = colorsTheme.canvasBg;
+            ca.style.borderColor = colorsTheme.border;
+          } else {
+            colorsTheme = config.colors.dark;
+            html.style.backgroundColor=colorsTheme.bg;
+            document.body.style.backgroundColor=colorsTheme.bg;
+            ca.style.backgroundColor = colorsTheme.canvasBg;    
+            ca.style.borderColor = colorsTheme.border;
+          }
         }
+  
     </script>
 </body>
 </html>
