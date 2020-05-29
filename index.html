@@ -6,15 +6,14 @@
     <title>ChocoY</title>
     <style>
 
-        a{
-            color:blueviolet;
-        }
         html,body{
             margin:0;
             border:0;
             font-family: 'Courier New';
         }
         body{
+          background: repeating-linear-gradient(45deg, #fff 25%, var(--color2) 50%, #000 50%, #fff 75%);
+          background-size: 100% 100%;
         }
 
         main{
@@ -22,9 +21,9 @@
             margin: 0 auto;
             border: 6px  solid black;
             box-sizing: border-box;
-            padding: 0 30px;
             box-shadow: 0 0 5px lightgray;
             text-shadow: 0 0 2px lightgray;
+            
         }
 
         .stage{
@@ -47,6 +46,10 @@
           display: inline-block;
           margin: 8px;
           flex: auto;
+        }
+        header,footer{
+          background-image: linear-gradient(45deg, transparent 0%,transparent 25%,rgba(0,0,0,.1) 25%,rgba(0,0,0,.1) 50% ,transparent 50%,transparent 75%,rgba(0,0,0,.1) 75%,rgba(0,0,0,.1) 100%);
+	        background-size: 50px 50px;
         }
 
 
