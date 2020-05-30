@@ -233,6 +233,7 @@ body {
 }
 
 .card {
+  cursor: pointer;
   width: 10rem;
   margin: 15px 6px;
   height: 14rem;
@@ -493,11 +494,11 @@ body {
   text-align: center;
   padding: 20px;
   margin-bottom: 20px;
-  border-bottom: 1px solid #f3a7aa;
+  border-bottom: 1px solid #eee;
 }
 
 .qq-contact .qq {
-  padding: 10rem 0;
+  padding: 12rem 0;
   line-height: 2.5rem;
   cursor: pointer;
 }
@@ -519,6 +520,10 @@ body {
   animation: swing .8s;
 }
 
+.weixin-contact > div > img {
+  margin: 0 auto;
+}
+
 .contactForm {
   background: #fff;
   padding: 15px;
@@ -529,7 +534,7 @@ body {
   background: #f8f8f8;
   border-bottom: 3px solid #CD1B22;
   color: #888;
-  width: 50%;
+  width: 33.3333%;
   padding: 10px;
   transition: all .15s;
   cursor: pointer;
@@ -575,6 +580,4 @@ body {
   color: #fff;
   font-size: .9rem;
 }
- 
-
- /*# sourceMappingURL= style.css.map */
+/*# sourceMappingURL=style.css.map */
