@@ -20,7 +20,6 @@
             border: 6px  solid black;
             box-sizing: border-box;
             box-shadow: 8px 8px rgba(0,0,0,.15);
-            text-shadow: 0 0 2px rgba(255,255,255,.5);
             
         }
 
@@ -95,6 +94,21 @@
           user-select: none;
           margin: 0 3px;
         }
+        input.theme{
+          font-size: inherit;
+          width: inherit;
+          height: inherit;
+          font-family: inherit;
+          font-weight: bold;
+          display: inline-block;
+          line-height: inherit;
+        }
+        input.theme::before {
+          content: 'dark:';
+          position: relative;
+          left: -3.5rem;
+          top: -3px;
+        }
     </style>
 </head>
 <body>
@@ -109,7 +123,7 @@
                 <time datatime="2017-11-08 11:00:16+08:00">2017-11-08 11:00:16</time>
                 <figure>
                     <div class="intro">
-                      <h3>light:<input id="theme" type="checkbox" checked="true" onchange="themeChange"/></h3>
+                      <h3><input id="theme" class="theme" type="checkbox" onchange="themeChange"/></h3>
                         <h3> 
                           <span class="keyboard">←</span><span class="keyboard">→</span><span class="keyboard">↓</span><span class="keyboard">↑</span>
                         </h3>
@@ -152,12 +166,12 @@
               L: [175,70,65],
               T: [200,70,65],
               textColor: "#888",
-              lineColor: "#ddd",
-              frameColor: "#aaa"
+              lineColor: "#eee",
+              frameColor: "#bbb"
             },
             dark:{
-              bg: "#222",
-              canvasBg:"#181818",
+              bg: "#333",
+              canvasBg:"#222",
               border:"#333",
               O: [0,25,30],
               I: [35,25,30],
@@ -167,8 +181,8 @@
               L: [175,25,30],
               T: [200,25,30],
               textColor: "#666",
-              lineColor: "#222",
-              frameColor: "#333"
+              lineColor: "#333",
+              frameColor: "#444"
             }
           },
           cubeSize: 14,
@@ -188,7 +202,7 @@
         };
         const BlockType = ["S", "Z", "L", "J", "I", "O", "T"];
         const HIGHSCORE = 'highScore';
-        const RID_DELAY = 200;
+        const RID_DELAY = 250;
         
         let colorsTheme = config.colors.light;
         
@@ -213,8 +227,8 @@
             this.boardWidth =
               cfg.boardHorizontalCubes * cfg.cubeSize +
               (cfg.boardHorizontalCubes + 1) * cfg.lineWidth;
-            this.boardTop = Math.floor((H - this.boardHeight) / 2);
-            this.boardLeft = 10; //Math.floor((W - this.boardWidth) / 2);
+            this.boardTop = Math.floor((H - this.boardHeight) / 2) + .5;
+            this.boardLeft = Math.floor((W - this.boardWidth * 2) / 2) + .5;
             this.cvs = cvs;
             this.board = board;
           }
@@ -327,19 +341,15 @@
             });
           }
           drawNode(top, left, cubeSize, lineWidth, node) {
-            let lineFix = -lineWidth / 2;
-            let light = colorsTheme[node.type][2];
-            if(this.board.ridLinesTimer[node.y] > 0){
-              if(colorsTheme == config.colors.light){
-                light+=Math.ceil((Date.now() - this.board.ridLinesTimer[node.y])/5);
-              } else {
-                light-=Math.ceil((Date.now() - this.board.ridLinesTimer[node.y])/8);
+            let lineFix = -.5;
+            let a = 1;
+            if(this.board.ridLinesTimer[node.y]){            
+              a = 1-(Date.now() - this.board.ridLinesTimer[node.y])/RID_DELAY;
+              if(a < 0){
+                a = 0;
               }
             }
-            if(light > 100){
-              light = 100;
-            }
-            this.cvs.strokeStyle = `hsl(${colorsTheme[node.type][0]},${colorsTheme[node.type][1]}%,${light}%)`;
+            this.cvs.strokeStyle = `hsl(${colorsTheme[node.type][0]},${colorsTheme[node.type][1]}%,${colorsTheme[node.type][2]}%,${a})`;
             this.cvs.beginPath();
             this.cvs.rect(left + node.x * (cubeSize + lineWidth) + lineWidth + lineFix+cubeSize/6,
                          top + node.y * (cubeSize + lineWidth) + lineWidth + lineFix+cubeSize/6,cubeSize*2/3,cubeSize*2/3);
@@ -398,7 +408,7 @@
               this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 8 * this.cubeSize
             );
             this.cvs.fillText(
-              `LEVEL: ${this.board.level || 1}`,
+              `LEVEL: ${this.board.level + 1 || 1}`,
               this.boardLeft + this.boardWidth + this.cubeSize * 2,
               this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 10 * this.cubeSize
             );
@@ -429,9 +439,11 @@
             this.highScore = localStorage.getItem(HIGHSCORE) || 0;
             this.score = 0;
             this.lines = 0;
-            this.level = 1;
+            this.level = 0;
             this.ridLinesTimer = new Array(config.boardVerticalCubes);
             this.ridLinesTimer.fill(0);
+
+            this.controller = null;
           }
         
           randomBlock() {
@@ -543,9 +555,17 @@
             });
 
             this.nodes = newNodes;
-            this.lines += ridLinesCount;
-            this.level = Math.floor(this.lines / 10);
-            this.score += config.scoreForLines[ridLinesCount];
+
+            this.onRidLine(ridLinesCount);
+          }
+          onRidLine(lines){
+            this.lines += lines;
+            let level = Math.floor(this.lines / 10);
+            if(this.level != level){
+              this.level = level;
+              this.controller.onNewLevel(this.level);
+            }
+            this.score += config.scoreForLines[lines];
             this.highScore = this.score > this.highScore ? this.score : this.highScore;
             localStorage.setItem(HIGHSCORE,this.highScore);
           }
@@ -1064,6 +1084,7 @@
             };
             this.keys = [];
             this.board = new Board(config, cvs);
+            this.board.controller = this;
             this.painter = new Painter(config, cvs, this.board);
             // board
             this.keyDelayIds = { left: {}, right: {}, down: {} };
@@ -1089,23 +1110,24 @@
           }
           startDrop() {
             this.dropIntervalId = setInterval(() => {
-              if (this.board.moveBlock(direction.down)) {
-                this.speedUp();
-                window.clearInterval(this.dropIntervalId);
-                this.startDrop();
-              }
+              this.board.moveBlock(direction.down);
             }, this.dropDelay);
           }
-          speedUp() {
-            this.dropDelay = 1000 - this.board.level * 100;
-            if (this.dropDelay < 250) {
-              this.dropDelay = 250;
+          onNewLevel(l) {
+            let dropDelay = 1000 - l * 50;
+            if (dropDelay < 150) {
+              dropDelay = 150;
             }
+            this.dropDelay = dropDelay;
+            window.clearInterval(this.dropIntervalId);
+            this.startDrop();
           }
         
           initConfig() {
               config.fontStyle = `${config.cubeSize * config.fontSize}px  ${config.font}`;
               ca.style.backgroundColor = colorsTheme.canvasBg;
+              this.board.level = 0;
+              this.dropDelay = 1000;
           }
           initKeys() {
             window.onkeydown = e => {
@@ -1179,7 +1201,7 @@
         const html = document.getElementsByTagName("html")[0];
         
         document.getElementById("theme").onchange = (e) => {
-          if(e.target.checked){
+          if(!e.target.checked){
             colorsTheme = config.colors.light;
             html.style.backgroundColor=colorsTheme.bg;
             document.body.style.backgroundColor=colorsTheme.bg;
