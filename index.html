@@ -44,7 +44,7 @@
           flex: auto;
         }
         header,footer{          
-          background-image: linear-gradient(45deg, transparent 0%,transparent 49%,rgba(0,0,0,0.2) 50% ,transparent 51%,transparent 100%);
+          background-image: linear-gradient(135deg, transparent 0%,transparent 49%,rgba(0,0,0,0.2) 50% ,transparent 51%,transparent 100%);
           background-size: 20px 20px;
         }
 
@@ -392,25 +392,31 @@
             this.cvs.fillStyle = colorsTheme.textColor;
             this.cvs.font = config.fontStyle;
             this.cvs.textBaseline = "bottom";
+            let top = this.boardTop + 7 * this.cubeSize + 8 * this.lineWidth;
+            let left = this.boardLeft + this.boardWidth + this.cubeSize * 2;
+            let gap = 2 * this.lineWidth + 2 * this.cubeSize;
             this.cvs.fillText(
               `H-SCORE: ${this.board.highScore || 0}`,
-              this.boardLeft + this.boardWidth + this.cubeSize * 2,
-              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 4 * this.cubeSize
+              left,
+              top
             );
+            top = top + gap;
             this.cvs.fillText(
               `SCORE: ${this.board.score || 0}`,
-              this.boardLeft + this.boardWidth + this.cubeSize * 2,
-              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 6 * this.cubeSize
+              left,
+              top
             );
+            top = top + gap;
             this.cvs.fillText(
               `LINES: ${this.board.lines || 0}`,
-              this.boardLeft + this.boardWidth + this.cubeSize * 2,
-              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 8 * this.cubeSize
+              left,
+              top
             );
+            top = top + gap;
             this.cvs.fillText(
               `LEVEL: ${this.board.level + 1 || 1}`,
-              this.boardLeft + this.boardWidth + this.cubeSize * 2,
-              this.boardTop + 4 * this.cubeSize + 5 * this.lineWidth + 10 * this.cubeSize
+              left,
+              top
             );
           }
           draw() {
